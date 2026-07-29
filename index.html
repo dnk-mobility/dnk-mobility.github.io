@@ -88,39 +88,45 @@
     font-size:12px;
   }
   .title-grid .cell{
-    padding:10px 12px;
+    padding:8px 12px;
     border-right:1px solid var(--line);
     border-bottom:1px solid var(--line);
-    height:44px;
+    height:48px;
     display:flex;
     flex-direction:column;
     justify-content:center;
     overflow:hidden;
   }
-  .title-grid .cell .v{white-space:nowrap;text-overflow:ellipsis;overflow:hidden;}
-  .title-grid .cell.wide{
-    grid-column:1 / -1;
-    border-right:none;
-    height:auto;
-    min-height:44px;
-    overflow:visible;
-  }
-  .title-grid .cell.wide .v{
-    white-space:normal;
-    overflow:visible;
-    text-overflow:clip;
-  }
-  .title-grid .cell:nth-child(2n){border-right:none;}
   .title-grid .cell .k{
     display:block;
     color:var(--gray-500);
-    font-size:10.5px;
+    font-size:10px;
+    line-height:1.2;
     margin-bottom:2px;
   }
   .title-grid .cell .v{
     font-weight:700;
     color:var(--gray-900);
     font-variant-numeric:tabular-nums;
+    font-size:12.5px;
+    line-height:1.25;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    overflow:hidden;
+  }
+  .title-grid .cell.right{border-right:none;}
+  .title-grid .cell.bottom{border-bottom:none;}
+  .title-grid .cell.wide{
+    grid-column:1 / -1;
+    border-right:none;
+    height:auto;
+    min-height:48px;
+    overflow:visible;
+  }
+  .title-grid .cell.wide .v{
+    white-space:normal;
+    overflow:visible;
+    text-overflow:clip;
   }
 
   main{
@@ -140,22 +146,32 @@
     grid-template-columns:1fr 1fr;
   }
   .summary-strip .item{
-    padding:12px 12px;
+    padding:4px 8px;
     border-right:1px solid var(--line);
     border-top:1px solid var(--line);
+    height:48px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    overflow:hidden;
   }
   .summary-strip .item:nth-child(2n){border-right:none;}
   .summary-strip .item .label{
-    font-size:10.5px;
+    font-size:8px;
+    line-height:1.2;
     color:var(--gray-500);
-    margin:0 0 2px;
+    margin:0 0 1px;
     letter-spacing:.02em;
   }
   .summary-strip .item .value{
-    font-size:16px;
+    font-size:10px;
+    line-height:1.2;
     font-weight:800;
     color:var(--navy);
     font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
 
   /* ===== Section shell ===== */
@@ -334,18 +350,18 @@
 </div>
 
 <div class="doc-header">
-  <p class="doc-type">공정 설비 정보 · 현장 QR 조회용</p>
+  <p class="doc-type">공정 설비 정보 시스템 <span style="opacity:.7;font-weight:600;">· EQUIPMENT INFORMATION SYSTEM</span></p>
   <h1>조립전 유로계 리크검사기</h1>
 
   <div class="title-block">
     <div class="title-grid">
       <div class="cell wide"><span class="k">공정명 / 공정No.</span><span class="v">유로계 리크 테스트(조립전) · 120</span></div>
       <div class="cell"><span class="k">품명</span><span class="v">HOUSING ASS'Y-MOTOR</span></div>
-      <div class="cell"><span class="k">품번</span><span class="v">47750-0E000</span></div>
+      <div class="cell right"><span class="k">품번</span><span class="v">47750-0E000</span></div>
       <div class="cell"><span class="k">설비명</span><span class="v">리크 테스터</span></div>
-      <div class="cell"><span class="k">문서번호</span><span class="v">DnK-250915-002</span></div>
-      <div class="cell"><span class="k">개정일자</span><span class="v">2025-09-15</span></div>
-      <div class="cell"><span class="k">상태</span><span class="v">RELEASED</span></div>
+      <div class="cell right"><span class="k">문서번호</span><span class="v">DnK-250915-002</span></div>
+      <div class="cell bottom"><span class="k">개정일자</span><span class="v">2025-09-15</span></div>
+      <div class="cell right bottom"><span class="k">상태</span><span class="v">RELEASED</span></div>
     </div>
   </div>
 </div>
