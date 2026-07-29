@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>레이저 마킹기 | 공정No.110</title>
+<style>
+  :root{
+    --navy:#0a2540;
+    --navy-2:#0f3255;
+    --steel:#1a4971;
+    --accent:#0f6cb0;
+    --gray-900:#181d22;
+    --gray-700:#454e57;
+    --gray-500:#6d7683;
+    --gray-400:#9aa3ae;
+    --gray-300:#d3d8de;
+    --gray-200:#e6e9ed;
+    --gray-100:#f4f6f8;
+    --white:#ffffff;
+    --ok-bg:#eaf4ee;
+    --ok-text:#1c6b41;
+    --warn-bg:#fbf3e2;
+    --warn-text:#8a5a12;
+    --line:#d3d8de;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    background:var(--gray-100);
+    color:var(--gray-900);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    font-size:14.5px;
+  }
+
+  /* ===== Top identity bar ===== */
+  .id-bar{
+    background:var(--navy);
+    color:#cdd8e3;
+    font-size:11px;
+    letter-spacing:.03em;
+    padding:6px 16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .id-bar .product{
+    font-weight:700;
+    font-size:12px;
+    color:#ffffff;
+    letter-spacing:.01em;
+  }
+
+  /* ===== Document title block (mirrors 작업표준서 서식) ===== */
+  .doc-header{
+    background:var(--navy);
+    color:var(--white);
+    padding:18px 16px;
+  }
+  .doc-header .doc-type{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.14em;
+    color:#8fb3d6;
+    margin:0 0 4px;
+  }
+  .doc-header h1{
+    margin:0 0 14px;
+    font-size:22px;
+    font-weight:800;
+    letter-spacing:-0.01em;
+  }
+  .title-block{
+    background:var(--white);
+    color:var(--gray-900);
+    border-radius:8px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    margin-top:2px;
+  }
+  .title-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    font-size:12px;
+  }
+  .title-grid .cell{
+    padding:6px 10px;
+    border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    height:52px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .title-grid .cell .k{
+    display:block;
+    color:var(--gray-500);
+    font-size:9px;
+    line-height:1.15;
+    margin-bottom:2px;
+  }
+  .title-grid .cell .v{
+    font-weight:700;
+    color:var(--gray-900);
+    font-variant-numeric:tabular-nums;
+    font-size:11px;
+    line-height:1.2;
+    white-space:normal;
+    word-break:keep-all;
+    overflow:hidden;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+  }
+  .title-grid .cell.right{border-right:none;}
+  .title-grid .cell.bottom{border-bottom:none;}
+  .title-grid .cell.wide{
+    grid-column:1 / -1;
+    border-right:none;
+    height:auto;
+    min-height:52px;
+    overflow:visible;
+  }
+  .title-grid .cell.wide .v{
+    -webkit-line-clamp:unset;
+    overflow:visible;
+  }
+
+  main{
+    max-width:640px;
+    margin:0 auto;
+    padding:0 14px 60px;
+  }
+
+  /* ===== Section shell ===== */
+  .section{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:8px;
+    margin-bottom:12px;
+    overflow:hidden;
+  }
+  .section > summary{
+    padding:13px 14px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+    list-style:none;
+    font-weight:700;
+    font-size:14.5px;
+    color:var(--gray-900);
+  }
+  .section > summary::-webkit-details-marker{display:none;}
+  .section > summary .num{
+    width:22px;height:22px;
+    border-radius:50%;
+    background:var(--navy);
+    color:#fff;
+    font-size:11px;
+    font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .section > summary .chev{
+    margin-left:auto;
+    color:var(--gray-400);
+    font-size:13px;
+  }
+  .section[open] > summary{border-bottom:1px solid var(--line);}
+  .section .body{padding:14px;}
+
+  h4.sub{
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--gray-500);
+    margin:16px 0 8px;
+    padding-top:12px;
+    border-top:1px dashed var(--line);
+  }
+  h4.sub:first-child{margin-top:0;padding-top:0;border-top:none;}
+
+  ul.plain, ol.plain{margin:6px 0;padding-left:0;list-style:none;}
+  ul.plain li, ol.plain li{
+    position:relative;
+    padding-left:18px;
+    margin-bottom:7px;
+    color:var(--gray-700);
+    font-size:13.5px;
+  }
+  ul.plain li::before{
+    content:"–";
+    position:absolute;left:0;color:var(--gray-400);
+  }
+
+  /* ===== Process flow (timeline) ===== */
+  .flow{margin:4px 0 2px;}
+  .flow-step{
+    position:relative;
+    padding:0 0 18px 30px;
+  }
+  .flow-step:last-child{padding-bottom:0;}
+  .flow-step::before{
+    content:"";
+    position:absolute;
+    left:10px; top:22px; bottom:-2px;
+    width:1px;
+    background:var(--gray-300);
+  }
+  .flow-step:last-child::before{display:none;}
+  .flow-step .dot{
+    position:absolute;
+    left:0; top:0;
+    width:21px;height:21px;
+    border-radius:50%;
+    background:var(--white);
+    border:2px solid var(--navy);
+    color:var(--navy);
+    font-size:10.5px;
+    font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .flow-step .txt{font-size:13.5px;color:var(--gray-800,#232a31);padding-top:1px;}
+  .flow-step .txt .sp{
+    display:block;
+    margin-top:5px;
+    background:var(--gray-100);
+    border-left:2px solid var(--accent);
+    padding:6px 9px;
+    font-size:12px;
+    color:var(--gray-700);
+    font-variant-numeric:tabular-nums;
+  }
+
+  .callout{
+    background:var(--warn-bg);
+    color:var(--warn-text);
+    border-left:3px solid #c8981f;
+    padding:9px 11px;
+    border-radius:3px;
+    font-size:12.5px;
+    margin:8px 0;
+  }
+
+  table.spec{width:100%;border-collapse:collapse;font-size:12.5px;}
+  table.spec th{
+    text-align:left;color:var(--gray-500);font-weight:700;
+    font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;
+    padding:7px 6px;border-bottom:1px solid var(--gray-300);
+  }
+  table.spec td{
+    padding:8px 6px;border-bottom:1px solid var(--gray-200);
+    color:var(--gray-900);
+  }
+  table.spec td.num{font-variant-numeric:tabular-nums;font-weight:600;}
+  table.spec tr:last-child td{border-bottom:none;}
+
+  table.check{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px;}
+  table.check th,table.check td{
+    border:1px solid var(--gray-300);padding:7px 5px;text-align:center;
+  }
+  table.check td:first-child,table.check th:first-child{text-align:left;font-size:12px;}
+  table.check th{background:var(--navy);color:#fff;font-size:10.5px;font-weight:700;}
+
+  .doc-list{display:flex;flex-direction:column;gap:8px;}
+  .doc-item{
+    display:flex;align-items:center;gap:11px;
+    border:1px solid var(--line);border-radius:6px;
+    padding:10px 11px;text-decoration:none;color:var(--gray-900);
+    background:var(--gray-100);
+  }
+  .doc-item .doc-icon{
+    width:32px;height:32px;flex-shrink:0;border-radius:5px;
+    background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;
+    font-size:10px;font-weight:800;letter-spacing:-0.02em;
+  }
+  .doc-item .doc-text{flex:1;min-width:0;}
+  .doc-item .doc-title{font-size:13px;font-weight:700;}
+  .doc-item .doc-sub{font-size:11px;color:var(--gray-500);margin-top:1px;}
+  .doc-item .arrow{color:var(--gray-400);font-size:15px;}
+
+  .case{border-top:1px solid var(--gray-200);padding-top:12px;margin-top:12px;}
+  .case:first-child{border-top:none;margin-top:0;padding-top:0;}
+  .case-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+  .case-head h5{margin:0;font-size:13.5px;color:var(--navy);}
+  .case p{margin:4px 0;font-size:12.5px;color:var(--gray-700);}
+  .tag{
+    font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:999px;
+    background:var(--ok-bg);color:var(--ok-text);white-space:nowrap;
+  }
+
+  footer{
+    max-width:640px;margin:6px auto 0;padding:6px 14px 34px;
+    text-align:center;color:var(--gray-500);font-size:11.5px;
+  }
+  footer .brand{
+    font-weight:800;color:var(--navy);font-size:12.5px;
+    letter-spacing:.02em;margin-bottom:6px;
+  }
+</style>
+</head>
+<body>
+
+<div class="id-bar">
+  <span>DnK MOBILITY · 후공정 생산기술팀</span>
+  <span class="product">e-AWD 70kW MOTOR HOUSING ASS'Y</span>
+</div>
+
+<div class="doc-header">
+  <p class="doc-type">공정 설비 정보 시스템 <span style="opacity:.7;font-weight:600;">· EQUIPMENT INFORMATION SYSTEM</span></p>
+  <h1>레이저 마킹기</h1>
+
+  <div class="title-block">
+    <div class="title-grid">
+      <div class="cell wide"><span class="k">공정명 / 공정No.</span><span class="v">레이저 마킹 · 110</span></div>
+      <div class="cell"><span class="k">품명</span><span class="v">HOUSING ASS'Y-MOTOR</span></div>
+      <div class="cell right"><span class="k">품번</span><span class="v">47750-0E000</span></div>
+      <div class="cell"><span class="k">설비명</span><span class="v">레이저 마킹기</span></div>
+      <div class="cell right"><span class="k">문서번호</span><span class="v">DnK-250915-001</span></div>
+      <div class="cell"><span class="k">개정일자</span><span class="v">2025-09-15</span></div>
+      <div class="cell right"><span class="k">상태</span><span class="v">RELEASED</span></div>
+      <div class="cell"><span class="k">레이저 출력</span><span class="v">85 ± 3 %</span></div>
+      <div class="cell right"><span class="k">레이저 주파수</span><span class="v">80kHz ± 1 kHz</span></div>
+      <div class="cell bottom"><span class="k">낙찰속도</span><span class="v">2,500 mm/s ± 2%</span></div>
+      <div class="cell right bottom"><span class="k">바코드 등급</span><span class="v">B등급 이상</span></div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <details class="section">
+    <summary><span class="num">①</span>설비 개요<span class="chev">▾</span></summary>
+    <div class="body">
+      <table class="spec">
+        <tr><td style="color:var(--gray-500);width:38%;">설비관리번호</td><td>(설비관리번호 입력)</td></tr>
+        <tr><td style="color:var(--gray-500);">문서 버전</td><td>REV.01</td></tr>
+        <tr><td style="color:var(--gray-500);">점검 주기</td><td>1회/shift (주간·야간)</td></tr>
+        <tr><td style="color:var(--gray-500);">최종 업데이트</td><td>(작성일 입력)</td></tr>
+      </table>
+    </div>
+  </details>
+
+  <details class="section">
+    <summary><span class="num">②</span>첨부 문서<span class="chev">▾</span></summary>
+    <div class="body">
+      <div class="doc-list">
+        <a class="doc-item" href="laser-marking-partlist.pdf" target="_blank" rel="noopener">
+          <span class="doc-icon">PDF</span>
+          <span class="doc-text"><div class="doc-title">PART LIST</div><div class="doc-sub">레이저 마킹기</div></span>
+          <span class="arrow">›</span>
+        </a>
+        <a class="doc-item" href="laser-marking-spec.pdf" target="_blank" rel="noopener">
+          <span class="doc-icon">PDF</span>
+          <span class="doc-text"><div class="doc-title">기계 설명서</div><div class="doc-sub">레이저 마킹기</div></span>
+          <span class="arrow">›</span>
+        </a>
+        <a class="doc-item" href="laser-marking-manual.pdf" target="_blank" rel="noopener">
+          <span class="doc-icon">PDF</span>
+          <span class="doc-text"><div class="doc-title">설비 매뉴얼</div><div class="doc-sub">레이저 마킹기</div></span>
+          <span class="arrow">›</span>
+        </a>
+      </div>
+    </div>
+  </details>
+
+  <details class="section">
+    <summary><span class="num">③</span>표준 작업 순서<span class="chev">▾</span></summary>
+    <div class="body">
+      <div class="flow">
+        <div class="flow-step"><span class="dot">1</span><div class="txt">마킹기의 레이저 렌즈 오염 상태를 확인하고, 제어반 HMI 상의 알람 유무를 점검</div></div>
+        <div class="flow-step"><span class="dot">2</span><div class="txt">前공정에서 배출된 제품을 갠트리 그리퍼가 피킹하여 마킹기 지그 상에 자동 안착</div></div>
+        <div class="flow-step"><span class="dot">3</span><div class="txt">안착된 제품이 내부진입</div></div>
+        <div class="flow-step"><span class="dot">4</span><div class="txt">레이저 마킹
+          <span class="sp">2D DATA MATRIX 예시: DNF4AA7547300100020000 (생산년월일+일련번호 구조)</span>
+        </div></div>
+        <div class="flow-step"><span class="dot">5</span><div class="txt">원위치로 복귀</div></div>
+        <div class="flow-step"><span class="dot">6</span><div class="txt">비전 스캐너가 2D 바코드를 자동 판독(리딩)</div></div>
+        <div class="flow-step"><span class="dot">7</span><div class="txt">갠트리가 제품을 조립전 유로계 Leak Test 공정으로 이송</div></div>
+        <div class="flow-step"><span class="dot">8</span><div class="txt">불량품은 NG 컨베이어로 이송</div></div>
+      </div>
+
+      <h4 class="sub">안전 주의사항</h4>
+      <ul class="plain">
+        <li>레이저 마킹기는 인체(특히 안구)에 치명적인 레이저를 조사하므로, 가동 중 마킹 룸 내부를 절대 맨눈으로 직접 들여다보지 말 것 (차폐 윈도우를 통해서만 확인할 것)</li>
+        <li>갠트리 가동 구역(안전 펜스 내부) 진입 시에는 반드시 설비 마스터 전원을 차단(Key-Lock 구속)하고 수동 모드로 전환한 뒤 진입할 것</li>
+      </ul>
+
+      <h4 class="sub">이상 발생 시 (바코드 리딩 불량 / Vision 스캔 NG 알람)</h4>
+      <ol class="plain">
+        <li>설비가 가동을 멈추거나 NG 제품을 갠트리를 통해 불량 컨베이어로 자동 배출하는지 확인</li>
+        <li>작업자가 수동 격리 후 마킹기 출력 및 렌즈 상태 점검</li>
+      </ol>
+
+      <h4 class="sub">부적합품 처리</h4>
+      <ol class="plain">
+        <li>즉시 적색마킹 후 부적합 보관장소 보관</li>
+        <li>부적합품 처리요령서에 준하여 처리</li>
+        <li>작업종료 후 불량 적치대로 이동</li>
+      </ol>
+    </div>
+  </details>
+
+  <details class="section">
+    <summary><span class="num">④</span>검사 규격 및 파라미터<span class="chev">▾</span></summary>
+    <div class="body">
+      <table class="spec">
+        <tr><th>항목</th><th>규격</th><th>주기</th></tr>
+        <tr><td>AIR 공급압력</td><td class="num">4~6 bar</td><td>1회/Shift</td></tr>
+        <tr><td>렌즈청결 및 상태</td><td>작업전후 렌즈세정 실시</td><td>1회/Shift</td></tr>
+        <tr><td>지그상태</td><td>깨짐, 변형없을 것</td><td>1회/Shift</td></tr>
+        <tr><td>낙찰속도</td><td class="num">2,500 mm/s ± 2% (±50 mm/s)</td><td>1회/Shift</td></tr>
+        <tr><td>레이저 주파수</td><td class="num">80kHz ± 1 kHz</td><td>1회/Shift</td></tr>
+        <tr><td>레이저 출력</td><td class="num">85 ± 3 %</td><td>1회/Shift</td></tr>
+        <tr><td>제품상태</td><td>칩 및 이물질 없을 것</td><td>100%/lot</td></tr>
+        <tr><td>바코드 등급</td><td>B등급 이상일 것</td><td>100%/lot</td></tr>
+        <tr><td>마킹상태</td><td>흐림 및 누락없을 것</td><td>100%/lot</td></tr>
+      </table>
+    </div>
+  </details>
+
+  <details class="section">
+    <summary><span class="num">⑤</span>설비 일상점검표 체크 항목<span class="chev">▾</span></summary>
+    <div class="body">
+      <p style="font-size:12.5px;color:var(--gray-700);margin:0 0 8px;">판정: <strong>O</strong> 양호 · <strong>△</strong> 조치필요 · <strong>X</strong> 불량(즉시 정지)</p>
+      <div class="callout">X 또는 △ 발생 시 즉시 생산기술/설비보전 통보 후 비고란에 조치내용 기록</div>
+
+      <h4 class="sub">전원부</h4>
+      <table class="check">
+        <tr><th style="text-align:left;">점검 항목</th><th>주</th><th>야</th></tr>
+        <tr><td>레이저 발생기(Laser Source) 전원 표시 정상 확인</td><td></td><td></td></tr>
+        <tr><td>제어반 HMI 알람 유무 점검</td><td></td><td></td></tr>
+      </table>
+
+      <h4 class="sub">구동부</h4>
+      <table class="check">
+        <tr><th style="text-align:left;">점검 항목</th><th>주</th><th>야</th></tr>
+        <tr><td>갠트리 그리퍼 피킹/이송 동작 확인</td><td></td><td></td></tr>
+        <tr><td>지그 상태 확인</td><td></td><td></td></tr>
+      </table>
+
+      <h4 class="sub">안전장치</h4>
+      <table class="check">
+        <tr><th style="text-align:left;">점검 항목</th><th>주</th><th>야</th></tr>
+        <tr><td>레이저 차폐 윈도우/룸 인터록 상태 확인(맨눈 직시 금지 표지 포함)</td><td></td><td></td></tr>
+        <tr><td>갠트리 가동구역 안전펜스 및 Key-Lock 마스터전원 차단 기능 확인</td><td></td><td></td></tr>
+        <tr><td>비상정지 스위치 작동 상태 확인</td><td></td><td></td></tr>
+      </table>
+
+      <h4 class="sub">공정특성(공정)</h4>
+      <table class="spec" style="margin-bottom:4px;">
+        <tr><th>점검 항목</th><th>기준</th></tr>
+        <tr><td>AIR 공급압력 표준 범위 확인</td><td class="num">4~6 bar</td></tr>
+        <tr><td>레이저 렌즈 청결 및 상태 확인</td><td>작업전후 렌즈세정 실시</td></tr>
+        <tr><td>지그 상태(고정/마모) 확인</td><td>깨짐, 변형없을 것</td></tr>
+        <tr><td>낙찰속도(이송속도) 설정값 표준 일치 확인</td><td class="num">2,500mm/s ± 2%</td></tr>
+        <tr><td>레이저 주파수 설정값 표준 일치 확인</td><td class="num">80kHz ± 1kHz</td></tr>
+        <tr><td>레이저 출력 설정값 표준 일치 확인</td><td class="num">85 ± 3%</td></tr>
+      </table>
+      <table class="check">
+        <tr><th style="text-align:left;">주/야 기록</th><th>주</th><th>야</th></tr>
+        <tr><td style="color:var(--gray-500);font-size:11px;">위 6개 항목 각각 기록</td><td></td><td></td></tr>
+      </table>
+
+      <p style="font-size:11px;color:var(--gray-500);margin-top:10px;">출처: 설비일상점검표(후공정)_70KW MOTOR HOUSING(P2) — 시트 「레이저마킹」 · 실제 O/△/X 기록은 해당 Excel 시트에서 진행, 본 화면은 점검 기준 확인용</p>
+    </div>
+  </details>
+
+  <details class="section">
+    <summary><span class="num">⑥</span>트러블슈팅 이력<span class="chev">▾</span></summary>
+    <div class="body">
+      <p style="color:var(--gray-500);font-size:12.5px;">수시 업데이트 영역 — 현재 등록된 사례 없음</p>
+    </div>
+  </details>
+
+  <details class="section">
+    <summary><span class="num">⑦</span>최근 공지<span class="chev">▾</span></summary>
+    <div class="body">
+      <p style="color:var(--gray-500);font-size:12.5px;">수시 업데이트 영역 — 현재 등록된 공지 없음</p>
+    </div>
+  </details>
+
+</main>
+
+<footer>
+  <div class="brand">DnK MOBILITY · 후공정 생산기술팀</div>
+  본 페이지는 사내 품질관리 목적으로 관리됩니다<br>
+  내용 오류·업데이트 문의는 후공정 생산기술팀으로 부탁드립니다
+</footer>
+
+</body>
+</html>
