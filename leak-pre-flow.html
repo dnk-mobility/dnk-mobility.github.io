@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>조립전 유로계 리크검사기 | 공정No.120</title>
+<style>
+  :root{
+    --navy:#0a2540;
+    --navy-2:#0f3255;
+    --steel:#1a4971;
+    --accent:#0f6cb0;
+    --gray-900:#181d22;
+    --gray-700:#454e57;
+    --gray-500:#6d7683;
+    --gray-400:#9aa3ae;
+    --gray-300:#d3d8de;
+    --gray-200:#e6e9ed;
+    --gray-100:#f4f6f8;
+    --white:#ffffff;
+    --ok-bg:#eaf4ee;
+    --ok-text:#1c6b41;
+    --warn-bg:#fbf3e2;
+    --warn-text:#8a5a12;
+    --line:#d3d8de;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    background:var(--gray-100);
+    color:var(--gray-900);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    font-size:14.5px;
+  }
+
+  /* ===== Top identity bar ===== */
+  .id-bar{
+    background:var(--navy);
+    color:#cdd8e3;
+    font-size:11px;
+    letter-spacing:.03em;
+    padding:6px 16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .id-bar .product{
+    font-weight:700;
+    font-size:12px;
+    color:#ffffff;
+    letter-spacing:.01em;
+  }
+
+  /* ===== Document title block (mirrors 작업표준서 서식) ===== */
+  .doc-header{
+    background:var(--navy);
+    color:var(--white);
+    padding:18px 16px;
+  }
+  .doc-header .doc-type{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.14em;
+    color:#8fb3d6;
+    margin:0 0 4px;
+  }
+  .doc-header h1{
+    margin:0 0 14px;
+    font-size:22px;
+    font-weight:800;
+    letter-spacing:-0.01em;
+  }
+  .title-block{
+    background:var(--white);
+    color:var(--gray-900);
+    border-radius:8px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    margin-top:2px;
+  }
+  .title-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    font-size:12px;
+  }
+  .title-grid .cell{
+    padding:6px 10px;
+    border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    height:52px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .title-grid .cell .k{
+    display:block;
+    color:var(--gray-500);
+    font-size:9px;
+    line-height:1.15;
+    margin-bottom:2px;
+  }
+  .title-grid .cell .v{
+    font-weight:700;
+    color:var(--gray-900);
+    font-variant-numeric:tabular-nums;
+    font-size:11px;
+    line-height:1.2;
+    white-space:normal;
+    word-break:keep-all;
+    overflow:hidden;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+  }
+  .title-grid .cell.right{border-right:none;}
+  .title-grid .cell.bottom{border-bottom:none;}
+  .title-grid .cell.wide{
+    grid-column:1 / -1;
+    border-right:none;
+    height:auto;
+    min-height:52px;
+    overflow:visible;
+  }
+  .title-grid .cell.wide .v{
+    -webkit-line-clamp:unset;
+    overflow:visible;
+  }
+
+  main{
+    max-width:640px;
+    margin:0 auto;
+    padding:0 14px 60px;
+  }
+
+  /* ===== Section shell ===== */
+  .section{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:8px;
+    margin-bottom:12px;
+    overflow:hidden;
+  }
+  .section > summary{
+    padding:13px 14px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+    list-style:none;
+    font-weight:700;
+    font-size:14.5px;
+    color:var(--gray-900);
+  }
+  .section > summary::-webkit-details-marker{display:none;}
+  .section > summary .num{
+    width:22px;height:22px;
+    border-radius:50%;
+    background:var(--navy);
+    color:#fff;
+    font-size:11px;
+    font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .section > summary .chev{
+    margin-left:auto;
+    color:var(--gray-400);
+    font-size:13px;
+  }
+  .section[open] > summary{border-bottom:1px solid var(--line);}
+  .section .body{padding:14px;}
+
+  h4.sub{
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--gray-500);
+    margin:16px 0 8px;
+    padding-top:12px;
+    border-top:1px dashed var(--line);
+  }
+  h4.sub:first-child{margin-top:0;padding-top:0;border-top:none;}
+
+  ul.plain, ol.plain{margin:6px 0;padding-left:0;list-style:none;}
+  ul.plain li, ol.plain li{
+    position:relative;
+    padding-left:18px;
+    margin-bottom:7px;
+    color:var(--gray-700);
+    font-size:13.5px;
+  }
+  ul.plain li::before{
+    content:"–";
+    position:absolute;left:0;color:var(--gray-400);
+  }
+
+  /* ===== Process flow (timeline) ===== */
+  .flow{margin:4px 0 2px;}
+  .flow-step{
+    position:relative;
+    padding:0 0 18px 30px;
+  }
+  .flow-step:last-child{padding-bottom:0;}
+  .flow-step::before{
+    content:"";
+    position:absolute;
+    left:10px; top:22px; bottom:-2px;
+    width:1px;
+    background:var(--gray-300);
+  }
+  .flow-step:last-child::before{display:none;}
+  .flow-step .dot{
+    position:absolute;
+    left:0; top:0;
+    width:21px;height:21px;
+    border-radius:50%;
+    background:var(--white);
+    border:2px solid var(--navy);
+    color:var(--navy);
+    font-size:10.5px;
+    font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .flow-step .txt{font-size:13.5px;color:var(--gray-800,#232a31);padding-top:1px;}
+  .flow-step .txt .sp{
+    display:block;
+    margin-top:5px;
+    background:var(--gray-100);
+    border-left:2px solid var(--accent);
+    padding:6px 9px;
+    font-size:12px;
+    color:var(--gray-700);
+    font-variant-numeric:tabular-nums;
+  }
+
+  .callout{
+    background:var(--warn-bg);
+    color:var(--warn-text);
+    border-left:3px solid #c8981f;
+    padding:9px 11px;
+    border-radius:3px;
+    font-size:12.5px;
+    margin:8px 0;
+  }
+
+  table.spec{width:100%;border-collapse:collapse;font-size:12.5px;}
+  table.spec th{
+    text-align:left;color:var(--gray-500);font-weight:700;
+    font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;
+    padding:7px 6px;border-bottom:1px solid var(--gray-300);
+  }
+  table.spec td{
+    padding:8px 6px;border-bottom:1px solid var(--gray-200);
+    color:var(--gray-900);
+  }
+  table.spec td.num{font-variant-numeric:tabular-nums;font-weight:600;}
+  table.spec tr:last-child td{border-bottom:none;}
+
+  table.check{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px;}
+  table.check th,table.check td{
+    border:1px solid var(--gray-300);padding:7px 5px;text-align:center;
+  }
+  table.check td:first-child,table.check th:first-child{text-align:left;font-size:12px;}
+  table.check th{background:var(--navy);color:#fff;font-size:10.5px;font-weight:700;}
+
+  .doc-list{display:flex;flex-direction:column;gap:8px;}
+  .doc-item{
+    display:flex;align-items:center;gap:11px;
+    border:1px solid var(--line);border-radius:6px;
+    padding:10px 11px;text-decoration:none;color:var(--gray-900);
+    background:var(--gray-100);
+  }
+  .doc-item .doc-icon{
+    width:32px;height:32px;flex-shrink:0;border-radius:5px;
+    background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;
+    font-size:10px;font-weight:800;letter-spacing:-0.02em;
+  }
+  .doc-item .doc-text{flex:1;min-width:0;}
+  .doc-item .doc-title{font-size:13px;font-weight:700;}
+  .doc-item .doc-sub{font-size:11px;color:var(--gray-500);margin-top:1px;}
+  .doc-item .arrow{color:var(--gray-400);font-size:15px;}
+
+  .case{border-top:1px solid var(--gray-200);padding-top:12px;margin-top:12px;}
+  .case:first-child{border-top:none;margin-top:0;padding-top:0;}
+  .case-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+  .case-head h5{margin:0;font-size:13.5px;color:var(--navy);}
+  .case p{margin:4px 0;font-size:12.5px;color:var(--gray-700);}
+  .tag{
+    font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:999px;
+    background:var(--ok-bg);color:var(--ok-text);white-space:nowrap;
+  }
+
+  footer{
+    max-width:640px;margin:6px auto 0;padding:6px 14px 34px;
+    text-align:center;color:var(--gray-500);font-size:11.5px;
+  }
+  footer .brand{
+    font-weight:800;color:var(--navy);font-size:12.5px;
+    letter-spacing:.02em;margin-bottom:6px;
+  }
+</style>
+</head>
+<body>
+
+<div class="id-bar">
+  <span>DnK MOBILITY · 후공정 생산기술팀</span>
+  <span class="product">e-AWD 70kW MOTOR HOUSING ASS'Y</span>
+</div>
+
+<div class="doc-header">
+  <p class="doc-type">공정 설비 정보 시스템 <span style="opacity:.7;font-weight:600;">· EQUIPMENT INFORMATION SYSTEM</span></p>
+  <h1>조립전 유로계 리크검사기</h1>
+
+  <div class="title-block">
+    <div class="title-grid">
+      <div class="cell wide"><span class="k">공정명 / 공정No.</span><span class="v">유로계 리크 테스트(조립전) · 120</span></div>
+      <div class="cell"><span class="k">품명</span><span class="v">HOUSING ASS'Y-MOTOR</span></div>
+      <div class="cell right"><span class="k">품번</span><span class="v">47750-0E000</span></div>
+      <div class="cell"><span class="k">설비명</span><span class="v">리크 테스터</span></div>
+      <div class="cell right"><span class="k">문서번호</span><span class="v">DnK-250915-002</span></div>
+      <div class="cell"><span class="k">개정일자</span><span class="v">2025-09-15</span></div>
+      <div class="cell right"><span class="k">상태</span><span class="v">RELEASED</span></div>
+      <div class="cell"><span class="k">테스트 압력</span><span class="v">2 bar ± 0.1</span></div>
+      <div class="cell right"><span class="k">판정 기준</span><span class="v">5 mL/min 이하</span></div>
+      <div class="cell bottom"><span class="k">채널</span><span class="v">#0</span></div>
+      <div class="cell right bottom"><span class="k">디텍터 사양</span><span class="v">코스모 LS-R700</span></div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <details class="section">
+    <summary><span class="num">①</span>설비 개요<span class="chev">▾</span></summary>
+    <div class="body">
+      <table class="spec">
+        <tr><td style="color:var(--gray-500);width:38%;">설비관리번호</td><td>(설비관리번호 입력)</td></tr>
+        <tr><td style="color:var(--gray-500);">문서 버전</td><td>REV.01</td></tr>
+        <tr><td style="color:var(--gray-500);">점검 주기</td><td>1회/shift (주간·야간)</td></tr>
+        <tr><td style="color:var(--gray-500);">최종 업데이트</td><td>(작성일 입력)</td></tr>
+      </table>
+    </div>
+  </details>
+
+  <details class="section">
+    <summary><span class="num">②</span>첨부 문서<span class="chev">▾</span></summary>
+    <div class="body">
+      <div class="doc-list">
+        <a class="doc-item" href="partlist.pdf" target="_blank" rel="noopener">
+          <span class="doc-icon">PDF</span>
+          <span class="doc-text"><div class="doc-title">PART LIST</div><div class="doc-sub">조립전 유로계 리크검사기</div></span>
+          <span class="arrow">›</span>
+        </a>
+        <a class="doc-item" href="machine-spec.pdf" target="_blank" rel="noopener">
+          <span class="doc-icon">PDF</span>
+          <span class="doc-text"><div class="doc-title">기계 설명서</div><div class="doc-sub">조립전 유로계 리크검사기</div></span>
+          <span class="arrow">›</span>
+        </a>
+        <a class="doc-item" href="manual.pdf" target="_blank" rel="noopener">
+          <span class="doc-icon">PDF</span>
+          <span class="doc-text"><div class="doc-title">설비 매뉴얼</div><div class="doc-sub">조립전 유로계 리크검사기</div></span>
+          <span class="arrow">›</span>
+        </a>
+        <a class="doc-item" href="ls-r700-manual.pdf" target="_blank" rel="noopener">
+          <span class="doc-icon">PDF</span>
+          <span class="doc-text"><div class="doc-title">디텍터 매뉴얼</div><div class="doc-sub">코스모 LS-R700</div></span>
+          <span class="arrow">›</span>
+        </a>
+      </div>
+    </div>
+  </details>
+
+  <details class="section">
+    <summary><span class="num">③</span>표준 작업 순서<span class="chev">▾</span></summary>
+    <div class="body">
+      <div class="flow">
+        <div class="flow-step"><span class="dot">1</span><div class="txt">前 공정 제품을 갠트리 그리퍼가 피킹 → 리크 지그 기준핀에 맞춰 자동 안착</div></div>
+        <div class="flow-step"><span class="dot">2</span><div class="txt">2D 바코드 자동판독</div></div>
+        <div class="flow-step"><span class="dot">3</span><div class="txt">안착된 제품이 내부진입</div></div>
+        <div class="flow-step"><span class="dot">4</span><div class="txt">설정된 리크조건으로 검사
+          <span class="sp">CHG 15s → BAL1 10s → BAL2 5s → DET 5s</span>
+        </div></div>
+        <div class="flow-step"><span class="dot">5</span><div class="txt">검사 완료 후 원위치 복귀</div></div>
+        <div class="flow-step"><span class="dot">6</span><div class="txt">갠트리가 제품을 조립전 전체계 리크 테스트 공정으로 이송</div></div>
+        <div class="flow-step"><span class="dot">7</span><div class="txt">불량품은 NG 컨베이어로 이송</div></div>
+      </div>
+
+      <h4 class="sub">안전 주의사항</h4>
+      <ul class="plain">
+        <li>고압(1.0bar 이상) 에어 주입 중 지그 내부·실링 부위에 절대 손을 대지 말 것</li>
+        <li>실링 고무 교체·갠트리 점검 시 반드시 마스터 전원 차단 및 에어 잔압 배기 후 진입</li>
+      </ul>
+
+      <h4 class="sub">이상 발생 시 (리크 NG 판정·알람)</h4>
+      <ol class="plain">
+        <li>갠트리의 NG 컨베이어 정상 배출 확인</li>
+        <li>작업자가 수동 수거 후 부적합품 격리함에 즉시 투입</li>
+        <li>2D 바코드 확인 → 누설량 데이터 기록 및 식별표 부착</li>
+      </ol>
+
+      <h4 class="sub">부적합품 처리</h4>
+      <ol class="plain">
+        <li>즉시 적색마킹 후 부적합 보관장소 보관</li>
+        <li>부적합품 처리요령서에 준하여 처리</li>
+        <li>작업종료 후 불량 적치대로 이동</li>
+      </ol>
+    </div>
+  </details>
+
+  <details class="section">
+    <summary><span class="num">④</span>검사 규격 및 파라미터<span class="chev">▾</span></summary>
+    <div class="body">
+      <table class="spec">
+        <tr><th>항목</th><th>규격</th><th>주기</th></tr>
+        <tr><td>에어 공급압력</td><td class="num">4~6 bar</td><td>1회/shift</td></tr>
+        <tr><td>테스트 압력</td><td class="num">2 bar ± 0.1</td><td>1회/shift</td></tr>
+        <tr><td>누설량 (판정)</td><td class="num">5 mL/min 이하</td><td>100%/lot</td></tr>
+        <tr><td>지그 상태</td><td>깨짐·변형 없을 것</td><td>1회/shift</td></tr>
+        <tr><td>클램프 상태</td><td>깨짐·변형 없을 것</td><td>1회/shift</td></tr>
+        <tr><td>클램프 실린더압</td><td class="num">상부 5bar / 인버터측 3.5bar</td><td>1회/shift</td></tr>
+        <tr><td>리크 테스트 조건</td><td>상기 ③항 참고</td><td>1회/shift</td></tr>
+      </table>
+    </div>
+  </details>
+
+  <details class="section">
+    <summary><span class="num">⑤</span>설비 일상점검표 체크 항목<span class="chev">▾</span></summary>
+    <div class="body">
+      <p style="font-size:12.5px;color:var(--gray-700);margin:0 0 8px;">판정: <strong>O</strong> 양호 · <strong>△</strong> 조치필요 · <strong>X</strong> 불량(즉시 정지)</p>
+      <div class="callout">X 또는 △ 발생 시 즉시 생산기술/설비보전 통보 후 비고란에 조치내용 기록</div>
+
+      <h4 class="sub">전원부</h4>
+      <table class="check">
+        <tr><th style="text-align:left;">점검 항목</th><th>주</th><th>야</th></tr>
+        <tr><td>제어 PLC/HMI 전원 및 화면 정상 표시 확인</td><td></td><td></td></tr>
+        <tr><td>압축공기 메인밸브 압력 표시 정상 확인</td><td></td><td></td></tr>
+      </table>
+
+      <h4 class="sub">구동부</h4>
+      <table class="check">
+        <tr><th style="text-align:left;">점검 항목</th><th>주</th><th>야</th></tr>
+        <tr><td>테스트 지그 승하강 실린더 작동 상태 확인</td><td></td><td></td></tr>
+        <tr><td>지그 상태 확인</td><td></td><td></td></tr>
+        <tr><td>마스킹 작동 상태 확인</td><td></td><td></td></tr>
+        <tr><td>마스킹 부 마모 상태 확인</td><td></td><td></td></tr>
+      </table>
+
+      <h4 class="sub">안전장치</h4>
+      <table class="check">
+        <tr><th style="text-align:left;">점검 항목</th><th>주</th><th>야</th></tr>
+        <tr><td>고압 에어 주입구역 접근관련 인터록 확인</td><td></td><td></td></tr>
+        <tr><td>비상정지 스위치 작동 상태 확인</td><td></td><td></td></tr>
+      </table>
+
+      <h4 class="sub">공정특성(공정)</h4>
+      <table class="spec" style="margin-bottom:4px;">
+        <tr><th>점검 항목</th><th>기준</th></tr>
+        <tr><td>에어 공급압력 표준 범위 확인</td><td class="num">4~6 bar</td></tr>
+        <tr><td>지그 상태(실링 마모/이물) 확인</td><td>깨짐, 변형없을 것</td></tr>
+        <tr><td>클램프 상태 확인</td><td>깨짐, 변형 풀림 없을 것</td></tr>
+        <tr><td>클램프 실린더 압력 표준 범위 확인</td><td class="num">상부 5bar / 인버터측 3.5bar</td></tr>
+        <tr><td>테스트 압력 설정값 표준 일치 확인</td><td class="num">2 bar ± 0.1</td></tr>
+        <tr><td>리크 테스트 조건(유지시간 등) 설정표준 일치 확인</td><td>작업표준서 참고</td></tr>
+      </table>
+      <table class="check">
+        <tr><th style="text-align:left;">주/야 기록</th><th>주</th><th>야</th></tr>
+        <tr><td style="color:var(--gray-500);font-size:11px;">위 6개 항목 각각 기록</td><td></td><td></td></tr>
+      </table>
+
+      <p style="font-size:11px;color:var(--gray-500);margin-top:10px;">출처: 설비일상점검표(후공정)_70KW MOTOR HOUSING(P2) — 시트 「03_유로계리크(조립전)」 · 실제 O/△/X 기록은 해당 Excel 시트에서 진행, 본 화면은 점검 기준 확인용</p>
+    </div>
+  </details>
+
+  <details class="section">
+    <summary><span class="num">⑥</span>조작 매뉴얼 요약 (LS-R700)<span class="chev">▾</span></summary>
+    <div class="body">
+      <ul class="plain">
+        <li>전원 On 후 <strong>5분 이상</strong> 경과 후 계측 시작</li>
+        <li>Settings Lock 해제: 메인메뉴 → 자물쇠 아이콘 → Unlock → 비밀번호 입력(초기값 0000)</li>
+        <li>Remote ↔ Manual 전환: Lock 해제 후 R/M 아이콘 선택</li>
+        <li>채널 변경: CH# 이동 후 커서 선택 (본 공정은 CH#0 고정)</li>
+        <li>Home 버튼으로 언제든 표준 화면 복귀</li>
+      </ul>
+      <div class="callout">Passcode 임의 변경 금지 — 변경 시 담당자에게 사전 공유</div>
+      <p style="font-size:11px;color:var(--gray-500);margin-top:8px;">📎 전체 매뉴얼 PDF는 상단 "② 첨부 문서" 참고</p>
+    </div>
+  </details>
+
+  <details class="section">
+    <summary><span class="num">⑦</span>트러블슈팅 이력<span class="chev">▾</span></summary>
+    <div class="body">
+      <div class="case">
+        <div class="case-head"><h5>사례 1 — 조립전 유로계 리크 불량 다발</h5><span class="tag">설비 정상</span></div>
+        <p>수몰테스트에서 기포 확인 → 실제 누설 존재. 설비 이상이 아닌 <strong>소재/가공 기인</strong> 결함으로 판단.</p>
+      </div>
+      <div class="case">
+        <div class="case-head"><h5>사례 2 — 특정 로트 NG 다발 (5/15 주간)</h5><span class="tag">설비 정상</span></div>
+        <p>유로부 13개 NG. 마스터 시료 0.39 ml/min(정상) 확인. 5/14 로트 금형수리품 5.64 ml/min → 수몰테스트로 리크 재확인. <strong>로트 소재결함</strong>으로 판단.</p>
+      </div>
+    </div>
+  </details>
+
+  <details class="section">
+    <summary><span class="num">⑧</span>최근 공지<span class="chev">▾</span></summary>
+    <div class="body">
+      <p style="color:var(--gray-500);font-size:12.5px;">수시 업데이트 영역 — 현재 등록된 공지 없음</p>
+    </div>
+  </details>
+
+</main>
+
+<footer>
+  <div class="brand">DnK MOBILITY · 후공정 생산기술팀</div>
+  본 페이지는 사내 품질관리 목적으로 관리됩니다<br>
+  내용 오류·업데이트 문의는 후공정 생산기술팀으로 부탁드립니다
+</footer>
+
+</body>
+</html>
