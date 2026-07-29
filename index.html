@@ -45,6 +45,13 @@
     padding:6px 16px;
     display:flex;
     justify-content:space-between;
+    align-items:center;
+  }
+  .id-bar .product{
+    font-weight:700;
+    font-size:12px;
+    color:#ffffff;
+    letter-spacing:.01em;
   }
 
   /* ===== Document title block (mirrors 작업표준서 서식) ===== */
@@ -81,13 +88,19 @@
     font-size:12px;
   }
   .title-grid .cell{
-    padding:9px 12px;
+    padding:10px 12px;
     border-right:1px solid var(--line);
     border-bottom:1px solid var(--line);
-    min-height:46px;
+    height:44px;
     display:flex;
     flex-direction:column;
     justify-content:center;
+    overflow:hidden;
+  }
+  .title-grid .cell .v{white-space:nowrap;text-overflow:ellipsis;overflow:hidden;}
+  .title-grid .cell.wide{
+    grid-column:1 / -1;
+    border-right:none;
   }
   .title-grid .cell:nth-child(2n){border-right:none;}
   .title-grid .cell .k{
@@ -309,21 +322,22 @@
 
 <div class="id-bar">
   <span>DnK MOBILITY · 후공정 생산기술팀</span>
-  <span>e-AWD 70kW HOUSING</span>
+  <span class="product">e-AWD 70kW MOTOR HOUSING ASS'Y</span>
 </div>
 
 <div class="doc-header">
-  <p class="doc-type">공정 설비 정보 &nbsp;·&nbsp; QUALITY WORK INSTRUCTION</p>
+  <p class="doc-type">공정 설비 정보 · 현장 QR 조회용</p>
   <h1>조립전 유로계 리크검사기</h1>
 
   <div class="title-block">
     <div class="title-grid">
+      <div class="cell wide"><span class="k">공정명 / 공정No.</span><span class="v">유로계 리크 테스트(조립전) · 120</span></div>
       <div class="cell"><span class="k">품명</span><span class="v">HOUSING ASS'Y-MOTOR</span></div>
       <div class="cell"><span class="k">품번</span><span class="v">47750-0E000</span></div>
-      <div class="cell"><span class="k">공정명 / 공정No.</span><span class="v">유로계 리크 테스트(조립전) / 120</span></div>
       <div class="cell"><span class="k">설비명</span><span class="v">리크 테스터</span></div>
       <div class="cell"><span class="k">문서번호</span><span class="v">DnK-250915-002</span></div>
-      <div class="cell"><span class="k">개정일자</span><span class="v">2025-09-15 · RELEASED</span></div>
+      <div class="cell"><span class="k">개정일자</span><span class="v">2025-09-15</span></div>
+      <div class="cell"><span class="k">상태</span><span class="v">RELEASED</span></div>
     </div>
   </div>
 </div>
