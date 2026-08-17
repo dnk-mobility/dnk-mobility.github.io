@@ -3,20 +3,19 @@
   - 실제 보안 장치가 아니라 "우연히/장난으로 계속 들여다보는 것"을 막는 수준의 간단한 장치입니다.
   - 페이지 전체를 막지 않고, 아코디언 섹션(①~⑧)을 펼치려는 시점에만 암호를 묻습니다.
     (상단 설비명·요약표는 QR 스캔 직후 바로 보이고, 실제 내용을 열 때만 암호 확인)
-  - 한 번 맞히면 그 기기는 30일간 다시 묻지 않습니다.
+  - 같은 탭(브라우저 창)에서 다른 설비 페이지로 이동하는 동안에는 다시 묻지 않지만,
+    브라우저/탭을 닫거나 QR을 다시 스캔해 새 탭으로 열면 다시 암호를 묻습니다.
   - 암호를 바꾸려면: 새 암호의 SHA-256 해시값을 구해서 아래 PASS_HASH를 교체하세요.
     (터미널 예시: node -e "console.log(require('crypto').createHash('sha256').update('새암호','utf8').digest('hex'))")
 */
 (function () {
   "use strict";
   var STORAGE_KEY = "dnk_gate_ok_v1";
-  var EXPIRY_MS = 30 * 24 * 60 * 60 * 1000; // 30일간 재입력 없이 열람 허용
   var PASS_HASH = "6712da30aaaa05bee4d101db4fd64542e8ac7176769bab88f87e826456678fa9";
 
   function isUnlocked() {
     try {
-      var exp = parseInt(localStorage.getItem(STORAGE_KEY) || "0", 10);
-      return exp > Date.now();
+      return sessionStorage.getItem(STORAGE_KEY) === "1";
     } catch (e) {
       return false;
     }
@@ -24,7 +23,7 @@
 
   function markUnlocked() {
     try {
-      localStorage.setItem(STORAGE_KEY, String(Date.now() + EXPIRY_MS));
+      sessionStorage.setItem(STORAGE_KEY, "1");
     } catch (e) {}
   }
 
