@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>문서 보기 | 공정 설비 정보관리 시스템</title>
+<style>
+  :root{
+    --navy:#0a2540;
+    --gray-500:#6d7683;
+    --gray-300:#d3d8de;
+    --gray-100:#f4f6f8;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--gray-100);}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    -webkit-user-select:none;
+    user-select:none;
+  }
+  .id-bar{
+    background:var(--navy);color:#cdd8e3;font-size:11px;letter-spacing:.03em;
+    padding:10px 14px;position:sticky;top:0;z-index:10;
+  }
+  .id-bar .fname{color:#fff;font-weight:700;font-size:13px;display:block;margin-top:2px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  #status{padding:40px 16px;text-align:center;color:var(--gray-500);font-size:13px;}
+  #pages{max-width:900px;margin:0 auto;padding:10px 8px 40px;}
+  .pg{display:block;margin:0 auto 10px;background:#fff;border:1px solid var(--gray-300);
+    box-shadow:0 1px 3px rgba(0,0,0,.08);max-width:100%;height:auto;}
+  .notice{max-width:900px;margin:0 auto;padding:0 16px;color:var(--gray-500);font-size:11px;text-align:center;}
+</style>
+</head>
+<body>
+<script src="gate.js"></script>
+
+<div class="id-bar">
+  <span>공정 설비 정보관리 시스템 · 첨부 문서</span>
+  <span class="fname" id="fname">불러오는 중…</span>
+</div>
+<div id="status">문서를 불러오는 중입니다…</div>
+<div id="pages"></div>
+<p class="notice">화면 캡처 방지 등 완전한 다운로드 차단은 아니며, 일반적인 저장 버튼 없이 보기 전용으로 제공됩니다.</p>
+
+<script type="module">
+  import * as pdfjsLib from "./pdfjs/pdf.min.mjs";
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "./pdfjs/pdf.worker.min.mjs";
+
+  var params = new URLSearchParams(location.search);
+  var file = params.get("file");
+  var statusEl = document.getElementById("status");
+  var pagesEl = document.getElementById("pages");
+  var fnameEl = document.getElementById("fname");
+
+  // 우클릭/길게 눌러 저장하기 방지 (완전 차단은 아니고 버튼 노출을 줄이는 수준)
+  document.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+
+  if (!file) {
+    statusEl.textContent = "문서 주소가 없습니다.";
+  } else {
+    fnameEl.textContent = decodeURIComponent(file);
+    document.title = decodeURIComponent(file) + " | 문서 보기";
+
+    pdfjsLib
+      .getDocument(file)
+      .promise.then(function (pdf) {
+        statusEl.style.display = "none";
+        var renderNext = function (n) {
+          if (n > pdf.numPages) return;
+          pdf.getPage(n).then(function (page) {
+            var scale = Math.min(2, (Math.min(900, window.innerWidth) - 16) / page.getViewport({ scale: 1 }).width);
+            var viewport = page.getViewport({ scale: scale });
+            var canvas = document.createElement("canvas");
+            canvas.className = "pg";
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            pagesEl.appendChild(canvas);
+            page
+              .render({ canvasContext: canvas.getContext("2d"), viewport: viewport })
+              .promise.then(function () {
+                renderNext(n + 1);
+              });
+          });
+        };
+        renderNext(1);
+      })
+      .catch(function (e) {
+        statusEl.textContent = "문서를 불러오지 못했습니다 (" + e.message + ")";
+      });
+  }
+</script>
+
+</body>
+</html>
