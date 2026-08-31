@@ -1,10 +1,8 @@
 /*
   간단 접속 암호 게이트 (새 서비스 가입 없이, GitHub Pages 그대로 사용)
   - 실제 보안 장치가 아니라 "우연히/장난으로 계속 들여다보는 것"을 막는 수준의 간단한 장치입니다.
-  - 설비 상세 페이지: 페이지 전체를 막지 않고, 아코디언 섹션(①~⑧)을 펼치려는 시점에만 암호를 묻습니다.
-    (상단 설비명·요약표는 QR 스캔 직후 바로 보이고, 실제 내용을 열 때만 암호 확인)
-  - 홈(index.html) 등 아코디언 섹션이 없는 페이지: 아코디언이 없어 "펼칠 때" 시점이 없으므로,
-    <main> 전체(설비 목록)를 페이지 진입 즉시 암호로 가립니다.
+  - 페이지에 들어가는 즉시 전체 화면을 가리고 암호를 묻습니다 (요약정보 포함, 예외 없음).
+    설비 페이지·홈(index.html) 모두 동일하게 동작합니다.
   - 같은 탭(브라우저 창)에서 다른 설비 페이지로 이동하는 동안에는 다시 묻지 않지만,
     브라우저/탭을 닫거나 QR을 다시 스캔해 새 탭으로 열면 다시 암호를 묻습니다.
   - 암호를 바꾸려면: 새 암호의 SHA-256 해시값을 구해서 아래 PASS_HASH를 교체하세요.
@@ -40,19 +38,19 @@
     });
   }
 
-  var overlayBuilt = false;
-  var wrap, input, err, cancelBtnEl;
-  var pendingDetails = null;
-  var pendingMain = null;
+  // 페이지 전체를 즉시 가림 (스크립트가 <body> 맨 앞에서 동기 실행되므로 콘텐츠가
+  // 그려지기 전에 숨길 수 있음)
+  document.documentElement.style.visibility = "hidden";
+
+  if (isUnlocked()) {
+    document.documentElement.style.visibility = "visible";
+    return;
+  }
 
   function buildOverlay() {
-    if (overlayBuilt) return;
-    overlayBuilt = true;
-
     var style = document.createElement("style");
     style.textContent =
-      "#dnk-gate{position:fixed;inset:0;background:rgba(10,37,64,.92);display:none;align-items:center;justify-content:center;z-index:99999;font-family:-apple-system,BlinkMacSystemFont,'Malgun Gothic','Apple SD Gothic Neo',sans-serif;}" +
-      "#dnk-gate.dnk-gate-show{display:flex;}" +
+      "#dnk-gate{position:fixed;inset:0;background:#0a2540;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:-apple-system,BlinkMacSystemFont,'Malgun Gothic','Apple SD Gothic Neo',sans-serif;visibility:visible;}" +
       ".dnk-gate-card{width:100%;max-width:300px;padding:0 24px;text-align:center;}" +
       ".dnk-gate-brand{color:#8fb3d6;font-size:11px;letter-spacing:.06em;margin-bottom:10px;}" +
       ".dnk-gate-title{color:#fff;font-size:17px;font-weight:800;margin-bottom:22px;}" +
@@ -60,26 +58,23 @@
       ".dnk-gate-input::placeholder{color:#7a92ab;}" +
       ".dnk-gate-err{color:#f3a6a1;font-size:12px;min-height:16px;margin-top:8px;}" +
       ".dnk-gate-btn{margin-top:6px;width:100%;padding:12px;border:none;border-radius:8px;background:#0f6cb0;color:#fff;font-size:14px;font-weight:700;cursor:pointer;}" +
-      ".dnk-gate-btn:active{opacity:.85;}" +
-      ".dnk-gate-close{margin-top:14px;background:none;border:none;color:#8fb3d6;font-size:12px;cursor:pointer;text-decoration:underline;}";
+      ".dnk-gate-btn:active{opacity:.85;}";
     document.documentElement.appendChild(style);
 
-    wrap = document.createElement("div");
+    var wrap = document.createElement("div");
     wrap.id = "dnk-gate";
     wrap.innerHTML =
       '<div class="dnk-gate-card">' +
       '<div class="dnk-gate-brand">DnK MOBILITY · 후공정 생산기술팀</div>' +
-      '<div class="dnk-gate-title">이 항목은 사내 전용입니다</div>' +
+      '<div class="dnk-gate-title">사내 전용 페이지입니다</div>' +
       '<input id="dnk-gate-pw" class="dnk-gate-input" type="password" placeholder="접속 암호" autocomplete="off" />' +
       '<div id="dnk-gate-err" class="dnk-gate-err"></div>' +
       '<button id="dnk-gate-go" class="dnk-gate-btn">확인</button>' +
-      '<button id="dnk-gate-cancel" class="dnk-gate-close">닫기</button>' +
       "</div>";
     document.documentElement.appendChild(wrap);
 
-    input = wrap.querySelector("#dnk-gate-pw");
-    err = wrap.querySelector("#dnk-gate-err");
-    cancelBtnEl = wrap.querySelector("#dnk-gate-cancel");
+    var input = wrap.querySelector("#dnk-gate-pw");
+    var err = wrap.querySelector("#dnk-gate-err");
     var btn = wrap.querySelector("#dnk-gate-go");
 
     function tryUnlock() {
@@ -87,15 +82,9 @@
       sha256Hex(val).then(function (hex) {
         if (hex === PASS_HASH) {
           markUnlocked();
-          hideOverlay();
-          if (pendingDetails) {
-            pendingDetails.open = true;
-            pendingDetails = null;
-          }
-          if (pendingMain) {
-            pendingMain.style.display = "";
-            pendingMain = null;
-          }
+          wrap.remove();
+          style.remove();
+          document.documentElement.style.visibility = "visible";
         } else {
           err.textContent = "암호가 올바르지 않습니다";
           input.value = "";
@@ -105,69 +94,21 @@
     }
 
     btn.addEventListener("click", tryUnlock);
-    cancelBtnEl.addEventListener("click", function () {
-      pendingDetails = null;
-      hideOverlay();
-    });
     input.addEventListener("keydown", function (e) {
       if (e.key === "Enter") tryUnlock();
-      if (e.key === "Escape") {
-        pendingDetails = null;
-        hideOverlay();
-      }
     });
-  }
-
-  function showOverlay(allowCancel) {
-    buildOverlay();
-    err.textContent = "";
-    input.value = "";
-    cancelBtnEl.style.display = allowCancel === false ? "none" : "";
-    wrap.classList.add("dnk-gate-show");
     setTimeout(function () {
       input.focus();
     }, 50);
   }
 
-  function hideOverlay() {
-    if (wrap) wrap.classList.remove("dnk-gate-show");
-  }
-
-  function guardSection(details) {
-    var summary = details.querySelector("summary");
-    if (!summary) return;
-    summary.addEventListener("click", function (e) {
-      if (isUnlocked()) return; // 이미 인증됨 — 평소처럼 열림
-      e.preventDefault();
-      pendingDetails = details;
-      showOverlay();
-    });
-  }
-
-  function guardMain() {
-    var main = document.querySelector("main");
-    if (!main) return;
-    main.style.display = "none";
-    pendingMain = main;
-    showOverlay(false);
-  }
-
   function init() {
-    if (isUnlocked()) return; // 인증된 기기는 아무 것도 가리지 않음
-    var sections = document.querySelectorAll("details.section");
-    if (sections.length > 0) {
-      sections.forEach
-        ? sections.forEach(guardSection)
-        : Array.prototype.forEach.call(sections, guardSection);
-      return;
-    }
-    // 아코디언 섹션이 없는 페이지(홈 등) — 본문 전체를 즉시 잠금
-    guardMain();
+    buildOverlay();
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
+  if (document.body) {
     init();
+  } else {
+    document.addEventListener("DOMContentLoaded", init);
   }
 })();
