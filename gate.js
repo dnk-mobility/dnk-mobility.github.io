@@ -1,8 +1,10 @@
 /*
   간단 접속 암호 게이트 (새 서비스 가입 없이, GitHub Pages 그대로 사용)
   - 실제 보안 장치가 아니라 "우연히/장난으로 계속 들여다보는 것"을 막는 수준의 간단한 장치입니다.
-  - 페이지 전체를 막지 않고, 아코디언 섹션(①~⑧)을 펼치려는 시점에만 암호를 묻습니다.
+  - 설비 상세 페이지: 페이지 전체를 막지 않고, 아코디언 섹션(①~⑧)을 펼치려는 시점에만 암호를 묻습니다.
     (상단 설비명·요약표는 QR 스캔 직후 바로 보이고, 실제 내용을 열 때만 암호 확인)
+  - 홈(index.html) 등 아코디언 섹션이 없는 페이지: 아코디언이 없어 "펼칠 때" 시점이 없으므로,
+    <main> 전체(설비 목록)를 페이지 진입 즉시 암호로 가립니다.
   - 같은 탭(브라우저 창)에서 다른 설비 페이지로 이동하는 동안에는 다시 묻지 않지만,
     브라우저/탭을 닫거나 QR을 다시 스캔해 새 탭으로 열면 다시 암호를 묻습니다.
   - 암호를 바꾸려면: 새 암호의 SHA-256 해시값을 구해서 아래 PASS_HASH를 교체하세요.
@@ -39,8 +41,9 @@
   }
 
   var overlayBuilt = false;
-  var wrap, input, err;
+  var wrap, input, err, cancelBtnEl;
   var pendingDetails = null;
+  var pendingMain = null;
 
   function buildOverlay() {
     if (overlayBuilt) return;
@@ -76,8 +79,8 @@
 
     input = wrap.querySelector("#dnk-gate-pw");
     err = wrap.querySelector("#dnk-gate-err");
+    cancelBtnEl = wrap.querySelector("#dnk-gate-cancel");
     var btn = wrap.querySelector("#dnk-gate-go");
-    var cancelBtn = wrap.querySelector("#dnk-gate-cancel");
 
     function tryUnlock() {
       var val = input.value;
@@ -89,6 +92,10 @@
             pendingDetails.open = true;
             pendingDetails = null;
           }
+          if (pendingMain) {
+            pendingMain.style.display = "";
+            pendingMain = null;
+          }
         } else {
           err.textContent = "암호가 올바르지 않습니다";
           input.value = "";
@@ -98,7 +105,7 @@
     }
 
     btn.addEventListener("click", tryUnlock);
-    cancelBtn.addEventListener("click", function () {
+    cancelBtnEl.addEventListener("click", function () {
       pendingDetails = null;
       hideOverlay();
     });
@@ -111,10 +118,11 @@
     });
   }
 
-  function showOverlay() {
+  function showOverlay(allowCancel) {
     buildOverlay();
     err.textContent = "";
     input.value = "";
+    cancelBtnEl.style.display = allowCancel === false ? "none" : "";
     wrap.classList.add("dnk-gate-show");
     setTimeout(function () {
       input.focus();
@@ -136,10 +144,25 @@
     });
   }
 
+  function guardMain() {
+    var main = document.querySelector("main");
+    if (!main) return;
+    main.style.display = "none";
+    pendingMain = main;
+    showOverlay(false);
+  }
+
   function init() {
     if (isUnlocked()) return; // 인증된 기기는 아무 것도 가리지 않음
     var sections = document.querySelectorAll("details.section");
-    sections.forEach ? sections.forEach(guardSection) : Array.prototype.forEach.call(sections, guardSection);
+    if (sections.length > 0) {
+      sections.forEach
+        ? sections.forEach(guardSection)
+        : Array.prototype.forEach.call(sections, guardSection);
+      return;
+    }
+    // 아코디언 섹션이 없는 페이지(홈 등) — 본문 전체를 즉시 잠금
+    guardMain();
   }
 
   if (document.readyState === "loading") {
