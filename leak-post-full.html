@@ -274,7 +274,9 @@
   }
   table.hist th{background:var(--navy);color:#fff;font-size:10px;font-weight:700;white-space:normal;line-height:1.3;}
   table.hist td{color:var(--gray-900);}
-  table.hist td.note{text-align:left;color:var(--gray-700);white-space:normal;min-width:110px;}
+  table.hist th,table.hist td{padding:9px 10px;}
+  table.hist th:not(:last-child),table.hist td:not(:last-child){min-width:64px;}
+  table.hist td.note{text-align:left;color:var(--gray-700);white-space:normal;padding:9px 6px;}
 
   .doc-list{display:flex;flex-direction:column;gap:8px;}
   .doc-item{
@@ -524,26 +526,27 @@
         <table class="hist">
           <tr>
             <th>일자</th>
-            <th>마스터 샘플<br>리크값(mL/min)</th>
-            <th>함침 여부</th>
-            <th>디텍터 보정값<br>수정</th>
-            <th>설비(디텍터)<br>온도(℃)</th>
+            <th>샘플명</th>
+            <th>리크값<br>(mL/min)</th>
+            <th>함침여부</th>
+            <th>Fixed<br>comp value</th>
+            <th>설비주변온도</th>
             <th>판정</th>
             <th>확인자</th>
             <th>비고</th>
           </tr>
           <tr>
-            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="note"></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="note"></td>
           </tr>
           <tr>
-            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="note"></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="note"></td>
           </tr>
           <tr>
-            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="note"></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="note"></td>
           </tr>
         </table>
       </div>
-      <p style="font-size:11px;color:var(--gray-500);margin-top:8px;">함침 여부: 마스터 샘플 재함침 처리 시 Y로 표기 · 설비 온도: 측정 시점의 디텍터/시험실 온도 · 판정: 정상/이상</p>
+      <p style="font-size:11px;color:var(--gray-500);margin-top:8px;">함침 여부: 마스터 샘플 재함침 처리 시 Y로 표기 · 설비주변온도: 측정 시점의 설비 주변 온도 · 판정: 정상/이상</p>
     </div>
   </details>
 
