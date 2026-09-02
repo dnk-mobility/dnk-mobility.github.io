@@ -275,7 +275,9 @@
   table.hist th{background:var(--navy);color:#fff;font-size:10px;font-weight:700;white-space:normal;line-height:1.3;}
   table.hist td{color:var(--gray-900);}
   table.hist th,table.hist td{padding:9px 10px;}
-  table.hist th:not(:last-child),table.hist td:not(:last-child){min-width:64px;}
+  table.hist th:not(.note-h),table.hist td:not(.note){min-width:64px;}
+  table.hist th.sub{min-width:52px;font-size:10px;}
+  table.hist th.note-h,table.hist td.note{min-width:88px;}
   table.hist td.note{text-align:left;color:var(--gray-700);white-space:normal;padding:9px 6px;}
 
   .doc-list{display:flex;flex-direction:column;gap:8px;}
@@ -520,28 +522,35 @@
       <div class="table-scroll">
         <table class="hist">
           <tr>
-            <th>일자</th>
-            <th>샘플명</th>
-            <th>리크값<br>(mL/min)</th>
-            <th>함침여부</th>
-            <th>Fixed<br>comp value</th>
-            <th>설비주변온도</th>
-            <th>판정</th>
-            <th>확인자</th>
-            <th>비고</th>
+            <th rowspan="2">일자</th>
+            <th rowspan="2">샘플명</th>
+            <th colspan="2">리크값<br>(mL/min)</th>
+            <th rowspan="2">함침여부</th>
+            <th colspan="2">Fixed<br>comp value</th>
+            <th rowspan="2">설비주변온도</th>
+            <th rowspan="2">판정</th>
+            <th rowspan="2">확인자</th>
+            <th rowspan="2" class="note-h">비고</th>
           </tr>
           <tr>
-            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="note"></td>
+            <th class="sub">전</th><th class="sub">후</th>
+            <th class="sub">전</th><th class="sub">후</th>
           </tr>
           <tr>
-            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="note"></td>
+            <td>2026-09-02</td><td>OK 마스터<br>(하우징)</td><td>-0.14</td><td>0.64</td><td>Y</td><td>3.5</td><td>3.0</td><td>22.4℃</td><td>OK</td><td></td><td class="note"></td>
           </tr>
           <tr>
-            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="note"></td>
+            <td>2026-09-02</td><td>OK 마스터<br>(인버터)</td><td>2.84</td><td>1.17</td><td>Y</td><td>0</td><td>2</td><td>22.4℃</td><td>OK</td><td></td><td class="note"></td>
+          </tr>
+          <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="note"></td>
+          </tr>
+          <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="note"></td>
           </tr>
         </table>
       </div>
-      <p style="font-size:11px;color:var(--gray-500);margin-top:8px;">함침 여부: 마스터 샘플 재함침 처리 시 Y로 표기 · 설비주변온도: 측정 시점의 설비 주변 온도 · 판정: 정상/이상</p>
+      <p style="font-size:11px;color:var(--gray-500);margin-top:8px;">리크값 · Fixed comp value: 보정 작업 전/후 값을 각각 기록 · 함침 여부: 마스터 샘플 재함침 처리 시 Y로 표기 · 설비주변온도: 측정 시점의 설비 주변 온도 · 판정: 정상(OK)/이상(NG)</p>
     </div>
   </details>
 
