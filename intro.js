@@ -2,7 +2,7 @@
   홈 화면(index.html) 진입 인트로 — QR 스캔 연출 + 브랜드 페이드
 
   - QR 조준선 위로 스캔 라인이 한 번 훑고 지나간 뒤, 브랜드명·제목이 떠오르고
-    시안 밑줄이 그어집니다. 전체 약 4.9초 (재생 ~3.7초 + 페이드아웃 1.2초).
+    시안 밑줄이 그어집니다. 전체 약 6초 (재생 ~3.2초 + 정지 1.5초 + 페이드아웃 1.2초).
   - **암호창보다 먼저** 재생됩니다. 순서: QR 스캔 → 인트로 → 암호 → 인덱스.
     그래서 이 파일은 index.html에서 gate.js **앞에** 로드되어야 하며,
     끝나면 window.dnkIntro.done 이 resolve 되어 gate.js가 그때 암호창을 띄웁니다.
@@ -24,7 +24,10 @@
   "use strict";
 
   var KEY = "dnk_intro_shown_v1";
-  var TAIL_MS = 300;     // 모든 동작이 끝난 뒤 머무는 여운
+  // 모든 동작이 끝난 뒤 화면이 그대로 멈춰 있는 시간. 텍스트를 읽을 시간은
+  // "등장(페이드인) 시간"이 아니라 이 값이 결정한다 — 등장 시간을 늘리면 글자가
+  // 완전히 또렷해지는 시점만 뒤로 밀리고 읽을 시간은 늘지 않는다.
+  var TAIL_MS = 1500;
   var FADE_MS = 1200;    // 페이드아웃 시간
   var TIMEOUT_MS = 6000; // animationend가 안 오는 경우를 대비한 안전장치
 
@@ -79,10 +82,10 @@
     "#dnk-intro .title{margin-top:7px;font-size:19px;font-weight:800;color:#fff;letter-spacing:-0.01em;opacity:0;}" +
     "#dnk-intro .rule{margin-top:13px;width:0;height:2px;background:#37c6e0;}" +
     "#dnk-intro.run .ret{animation:dnkRet .45s ease forwards;}" +
-    "#dnk-intro.run .scan{animation:dnkScan 1.2s cubic-bezier(.4,0,.2,1) .28s forwards;}" +
-    "#dnk-intro.run .brand{animation:dnkUp 2s ease 1s forwards;}" +
-    "#dnk-intro.run .title{animation:dnkUp 2s ease 1.2s forwards;}" +
-    "#dnk-intro.run .rule{animation:dnkRule 1s cubic-bezier(.4,0,.2,1) 1.55s forwards;}" +
+    "#dnk-intro.run .scan{animation:dnkScan 1s cubic-bezier(.4,0,.2,1) .28s forwards;}" +
+    "#dnk-intro.run .brand{animation:dnkUp 2s ease .8s forwards;}" +
+    "#dnk-intro.run .title{animation:dnkUp 2s ease 1s forwards;}" +
+    "#dnk-intro.run .rule{animation:dnkRule 1s cubic-bezier(.4,0,.2,1) 1.35s forwards;}" +
     "@keyframes dnkRet{to{opacity:1;}}" +
     "@keyframes dnkScan{0%{top:0;opacity:0;}14%{opacity:1;}86%{opacity:1;}100%{top:100%;opacity:0;}}" +
     "@keyframes dnkUp{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:none;}}" +
