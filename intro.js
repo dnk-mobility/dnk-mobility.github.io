@@ -2,7 +2,7 @@
   홈 화면(index.html) 진입 인트로 — QR 스캔 연출 + 브랜드 페이드
 
   - QR 조준선 위로 스캔 라인이 한 번 훑고 지나간 뒤, 브랜드명·제목이 떠오르고
-    시안 밑줄이 그어집니다. 전체 약 4.3초 (재생 ~3.1초 + 페이드아웃 1.2초).
+    시안 밑줄이 그어집니다. 전체 약 4.9초 (재생 ~3.7초 + 페이드아웃 1.2초).
   - **암호창보다 먼저** 재생됩니다. 순서: QR 스캔 → 인트로 → 암호 → 인덱스.
     그래서 이 파일은 index.html에서 gate.js **앞에** 로드되어야 하며,
     끝나면 window.dnkIntro.done 이 resolve 되어 gate.js가 그때 암호창을 띄웁니다.
@@ -18,15 +18,15 @@
   이 파일은 index.html 에서만 로드됩니다 (설비 페이지 10개는 제외 — 매번 나오면 방해됨).
 
   속도를 바꾸려면 아래 CSS의 animation delay/duration 을 조정하세요. 종료 시점은
-  마지막 동작(밑줄)의 animationend 에 맞춰 자동으로 따라갑니다.
+  모든 동작이 끝나는 것을 세어서 자동으로 따라갑니다 (어떤 동작이 가장 늦게 끝나든 무관).
 */
 (function () {
   "use strict";
 
   var KEY = "dnk_intro_shown_v1";
-  var TAIL_MS = 300;     // 밑줄이 다 그어진 뒤 머무는 여운
+  var TAIL_MS = 300;     // 모든 동작이 끝난 뒤 머무는 여운
   var FADE_MS = 1200;    // 페이드아웃 시간
-  var TIMEOUT_MS = 5000; // animationend가 안 오는 경우를 대비한 안전장치
+  var TIMEOUT_MS = 6000; // animationend가 안 오는 경우를 대비한 안전장치
 
   function alreadyShown() {
     try {
@@ -80,8 +80,8 @@
     "#dnk-intro .rule{margin-top:13px;width:0;height:2px;background:#37c6e0;}" +
     "#dnk-intro.run .ret{animation:dnkRet .45s ease forwards;}" +
     "#dnk-intro.run .scan{animation:dnkScan 1.2s cubic-bezier(.4,0,.2,1) .28s forwards;}" +
-    "#dnk-intro.run .brand{animation:dnkUp 1.2s ease 1s forwards;}" +
-    "#dnk-intro.run .title{animation:dnkUp 1.2s ease 1.2s forwards;}" +
+    "#dnk-intro.run .brand{animation:dnkUp 2s ease 1s forwards;}" +
+    "#dnk-intro.run .title{animation:dnkUp 2s ease 1.2s forwards;}" +
     "#dnk-intro.run .rule{animation:dnkRule 1s cubic-bezier(.4,0,.2,1) 1.55s forwards;}" +
     "@keyframes dnkRet{to{opacity:1;}}" +
     "@keyframes dnkScan{0%{top:0;opacity:0;}14%{opacity:1;}86%{opacity:1;}100%{top:100%;opacity:0;}}" +
@@ -122,11 +122,17 @@
   ov.addEventListener("click", finish);
   ov.classList.add("run");
 
-  // 마지막 동작(밑줄 그어짐)이 끝나는 시점에 맞춰 종료한다. 고정 타이머로 재면
-  // 최초 로드 때 CSS 애니메이션 시작이 수백 ms 늦어져 밑줄이 다 그어지기 전에
-  // 페이드아웃이 시작되는 경우가 있다.
+  // 모든 동작이 끝난 시점에 맞춰 종료한다.
+  //  - 고정 타이머로 재면 최초 로드 때 CSS 애니메이션 시작이 수백 ms 늦어져
+  //    마지막 동작이 다 끝나기 전에 페이드아웃이 시작되는 경우가 있다.
+  //  - "가장 늦게 끝나는 동작" 하나만 지켜보면, 나중에 delay/duration을 고쳤을 때
+  //    순서가 바뀌면서 다른 동작이 잘린다. 그래서 개수로 센다.
+  var animated = ov.querySelectorAll(".ret,.scan,.brand,.title,.rule");
+  var pending = animated.length;
   var safety = setTimeout(finish, TIMEOUT_MS);
-  ov.querySelector(".rule").addEventListener("animationend", function () {
+  ov.addEventListener("animationend", function () {
+    pending -= 1;
+    if (pending > 0) return;
     clearTimeout(safety);
     setTimeout(finish, TAIL_MS);
   });
