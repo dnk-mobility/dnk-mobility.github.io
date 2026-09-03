@@ -61,6 +61,9 @@
     fnameEl.textContent = decodeURIComponent(file);
     document.title = decodeURIComponent(file) + " | 문서 보기";
 
+    // 암호 게이트(1차 + 기술문서는 2차)를 통과한 뒤에 파일을 내려받는다
+    await (window.dnkGate && window.dnkGate.ready);
+
     pdfjsLib
       .getDocument(file)
       .promise.then(function (pdf) {

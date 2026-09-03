@@ -302,6 +302,14 @@
     font-weight:800;color:var(--navy);font-size:12.5px;
     letter-spacing:.02em;margin-bottom:6px;
   }
+  .section > summary .lock{
+    font-size:10px;font-weight:700;letter-spacing:-0.01em;flex-shrink:0;
+    color:var(--warn-text);background:var(--warn-bg);
+    border:1px solid #e8d6ae;border-radius:4px;padding:2px 6px;
+  }
+  .section.unlocked > summary .lock{
+    color:var(--ok-text);background:var(--ok-bg);border-color:#c5e0d0;
+  }
 </style>
 </head>
 <body>
@@ -371,8 +379,27 @@
     </div>
   </details>
 
+  <details class="section" data-lock="2">
+    <summary><span class="num">③</span>기술문서<span class="lock">잠금</span><span class="chev">▾</span></summary>
+    <div class="body">
+      <p style="font-size:12.5px;color:var(--gray-700);margin:0 0 10px;">설비 전기회로도·기계도면은 사내 기술자료로, 별도 암호 확인 후 열람할 수 있습니다.</p>
+      <div class="doc-list">
+        <a class="doc-item" href="pdf-viewer.html?file=taper-fastening-circuit.pdf" target="_blank" rel="noopener">
+          <span class="doc-icon">PDF</span>
+          <span class="doc-text"><div class="doc-title">설비 전기회로도</div><div class="doc-sub">테이퍼 플러그 체결기(5개소)</div></span>
+          <span class="arrow">›</span>
+        </a>
+        <a class="doc-item" href="pdf-viewer.html?file=taper-fastening-drawing.pdf" target="_blank" rel="noopener">
+          <span class="doc-icon">PDF</span>
+          <span class="doc-text"><div class="doc-title">기계도면</div><div class="doc-sub">테이퍼 플러그 체결기(5개소)</div></span>
+          <span class="arrow">›</span>
+        </a>
+      </div>
+    </div>
+  </details>
+
   <details class="section">
-    <summary><span class="num">③</span>표준 작업 순서<span class="chev">▾</span></summary>
+    <summary><span class="num">④</span>표준 작업 순서<span class="chev">▾</span></summary>
     <div class="body">
       <div class="flow">
         <div class="flow-step"><span class="dot">1</span><div class="txt">前공정 컨베이어에서 제품을 갠트리가 피킹하여 체결 지그에 자동 안착</div></div>
@@ -403,7 +430,7 @@
   </details>
 
   <details class="section">
-    <summary><span class="num">④</span>검사 규격 및 파라미터<span class="chev">▾</span></summary>
+    <summary><span class="num">⑤</span>검사 규격 및 파라미터<span class="chev">▾</span></summary>
     <div class="body">
       <table class="spec">
         <tr><th>항목</th><th>규격</th><th>주기</th></tr>
@@ -418,7 +445,7 @@
   </details>
 
   <details class="section">
-    <summary><span class="num">⑤</span>설비 일상점검표 체크 항목<span class="chev">▾</span></summary>
+    <summary><span class="num">⑥</span>설비 일상점검표 체크 항목<span class="chev">▾</span></summary>
     <div class="body">
       <p style="font-size:12.5px;color:var(--gray-700);margin:0 0 8px;">판정: <strong>O</strong> 양호 · <strong>△</strong> 조치필요 · <strong>X</strong> 불량(즉시 정지)</p>
       <div class="callout">X 또는 △ 발생 시 즉시 생산기술/설비보전 통보 후 비고란에 조치내용 기록</div>
@@ -462,14 +489,14 @@
   </details>
 
   <details class="section">
-    <summary><span class="num">⑥</span>트러블슈팅 이력<span class="chev">▾</span></summary>
+    <summary><span class="num">⑦</span>트러블슈팅 이력<span class="chev">▾</span></summary>
     <div class="body">
       <p style="color:var(--gray-500);font-size:12.5px;">수시 업데이트 영역 — 현재 등록된 사례 없음</p>
     </div>
   </details>
 
   <details class="section">
-    <summary><span class="num">⑦</span>최근 공지<span class="chev">▾</span></summary>
+    <summary><span class="num">⑧</span>최근 공지<span class="chev">▾</span></summary>
     <div class="body">
       <p style="color:var(--gray-500);font-size:12.5px;">수시 업데이트 영역 — 현재 등록된 공지 없음</p>
     </div>
