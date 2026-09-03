@@ -310,6 +310,41 @@
   .section.unlocked > summary .lock{
     color:var(--ok-text);background:var(--ok-bg);border-color:#c5e0d0;
   }
+
+  /* ===== Interaction — hover는 마우스 환경만, 터치는 :active로 별도 피드백 ===== */
+  .section > summary{position:relative;transition:background .22s ease,padding-left .22s ease;}
+  .section > summary::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+    background:var(--accent);transform:scaleY(0);transform-origin:top;
+    transition:transform .22s cubic-bezier(.4,0,.2,1);
+  }
+  .section[data-lock="2"] > summary::before{background:#c8981f;}
+  .doc-item,.doc-item .doc-icon,.doc-item .arrow,.doc-item .doc-title{
+    transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease,
+               background .18s ease,color .18s ease;
+  }
+
+  @media (hover:hover) and (pointer:fine){
+    .section > summary:hover{background:var(--gray-100);padding-left:19px;}
+    .section > summary:hover::before{transform:scaleY(1);}
+    .doc-item:hover{
+      transform:translateY(-2px);background:var(--white);border-color:#b9c2cc;
+      box-shadow:0 5px 14px rgba(10,37,64,.12),0 2px 4px rgba(10,37,64,.06);
+    }
+    .doc-item:hover .doc-icon{background:var(--accent);transform:scale(1.06);}
+    .doc-item:hover .arrow{transform:translateX(4px);color:var(--navy);}
+    .doc-item:hover .doc-title{color:var(--navy);}
+  }
+
+  .section > summary:active{background:var(--gray-100);}
+  .section > summary:active::before{transform:scaleY(1);}
+  .doc-item:active{background:var(--gray-200);transform:scale(.99);}
+  .doc-item:active .doc-icon{background:var(--accent);}
+
+  @media (prefers-reduced-motion:reduce){
+    .section > summary,.section > summary::before,
+    .doc-item,.doc-item .doc-icon,.doc-item .arrow,.doc-item .doc-title{transition:none!important;}
+  }
 </style>
 </head>
 <body>

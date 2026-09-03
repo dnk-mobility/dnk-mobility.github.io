@@ -76,6 +76,20 @@
 - 뷰포트: `max-width: 640px` 중앙 정렬 — 모바일 브라우저 기준으로 설계 (데스크톱에서도 문제없이 보이지만 최적화 대상은 스마트폰)
 - 반응형 메타 태그로 확대/축소 제한 (`maximum-scale=1.0`)
 
+### 인터랙션 (hover / tap, 2026-09-03 추가)
+
+**이 사이트는 QR 스캔 → 스마트폰이 주 사용 환경이라, hover 효과를 그냥 걸면 안 됩니다.** 안드로이드 크롬 등에서 탭한 요소에 hover 상태가 눌어붙어(sticky hover) 다른 곳을 누를 때까지 계속 강조된 것처럼 보입니다. 그래서 모든 hover 규칙은 `@media (hover:hover) and (pointer:fine)` 안에만 두고, 터치용 피드백은 `:active`로 따로 정의했습니다.
+
+| 대상 | 효과 |
+|---|---|
+| `.eq-card` (홈 카드 10장) | hover: `translateY(-3px)` + 그림자, 공정No. 배지가 `--navy` → `--accent`로 채워지며 `scale(1.06)`, 화살표 `translateX(5px)`, 설비명 네이비로 진해짐 / active: `scale(.985)` + 배지 채움 |
+| `.doc-item` (첨부문서·기술문서 PDF 링크) | hover: `translateY(-2px)` + 그림자, 배경 `--gray-100` → 흰색, PDF 아이콘 `--accent`로 채움, 화살표 `translateX(4px)` / active: `scale(.99)` + 아이콘 채움 |
+| `.section > summary` (아코디언 헤더) | hover/active: 왼쪽에 3px 세로 바가 위→아래로 차오르고(`::before` + `scaleY`) 배경 연회색, `padding-left` 14→19px. **바 색은 일반 항목 `--accent`(시안), `data-lock="2"` 잠금 항목은 `#c8981f`(주황)** — 잠김 여부를 색으로 한 번 더 알려줌 |
+
+- `transform` / `opacity` / `box-shadow` 위주로만 움직여서 저사양 스마트폰에서도 부담이 적습니다. JS는 쓰지 않습니다.
+- `@media (prefers-reduced-motion:reduce)`에서 전 transition을 끕니다.
+- `.section > summary`는 `position:relative`가 필수입니다 (`::before` 바의 기준). summary가 `display:flex`라 `::before`를 `position:absolute`로 빼지 않으면 플렉스 아이템이 되어 레이아웃이 밀립니다.
+
 ### 공통 레이아웃 구조 (위→아래)
 
 1. **`.id-bar`** — 네이비 바탕 최상단 바. `DnK MOBILITY · 후공정 생산기술팀` / `e-AWD 70kW MOTOR HOUSING ASS'Y`
@@ -313,7 +327,7 @@ git 저장소는 그 안의 `후공정 설비 정보 시스템 프로젝트\` �
 |---|---|
 | **개선1** | QR 시스템 최초 구축 — 설비 10개소 페이지·홈 화면, QR코드 생성, GitHub Pages 배포, 보고자료(PPT/DOCX)·WBS |
 | **개선2** | 보안·이력 강화 — 전 페이지 접속 암호 게이트, PDF 다운로드 버튼 제거(뷰어), 마스터 샘플·보정 이력 섹션 신설 |
-| **개선3** | 기술자료 항목 확장 — "③ 기술문서"(전기회로도·기계도면) 전 설비 신설, **2단계 암호**로 항목별 접근 차등화, 보정 이력 표 전/후 열 분할 |
+| **개선3** | 기술자료 항목 확장 — "③ 기술문서"(전기회로도·기계도면) 전 설비 신설, **2단계 암호**로 항목별 접근 차등화, 보정 이력 표 전/후 열 분할, hover/tap 인터랙션 도입(§4) |
 
 ### 이어서 할 일 (우선순위 순)
 

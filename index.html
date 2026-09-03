@@ -116,7 +116,6 @@
     padding:12px 13px;text-decoration:none;color:var(--gray-900);
     background:var(--white);
   }
-  .eq-card:active{background:var(--gray-100);}
   .eq-card .no-badge{
     width:44px;height:44px;flex-shrink:0;border-radius:8px;
     background:var(--navy);color:#fff;
@@ -136,6 +135,29 @@
   footer .brand{
     font-weight:800;color:var(--navy);font-size:12.5px;
     letter-spacing:.02em;margin-bottom:6px;
+  }
+
+  /* ===== Interaction — hover는 마우스 환경만, 터치는 :active로 별도 피드백 ===== */
+  .eq-card,.eq-card .no-badge,.eq-card .arrow,.eq-card .eq-name{
+    transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease,
+               background .18s ease,color .18s ease;
+  }
+
+  @media (hover:hover) and (pointer:fine){
+    .eq-card:hover{
+      transform:translateY(-3px);border-color:#b9c2cc;
+      box-shadow:0 6px 18px rgba(10,37,64,.13),0 2px 5px rgba(10,37,64,.07);
+    }
+    .eq-card:hover .no-badge{background:var(--accent);transform:scale(1.06);}
+    .eq-card:hover .arrow{transform:translateX(5px);color:var(--navy);}
+    .eq-card:hover .eq-name{color:var(--navy);}
+  }
+
+  .eq-card:active{background:var(--gray-100);transform:scale(.985);}
+  .eq-card:active .no-badge{background:var(--accent);}
+
+  @media (prefers-reduced-motion:reduce){
+    .eq-card,.eq-card .no-badge,.eq-card .arrow,.eq-card .eq-name{transition:none!important;}
   }
 </style>
 </head>
