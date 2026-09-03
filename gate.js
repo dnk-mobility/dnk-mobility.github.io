@@ -5,6 +5,8 @@
   [1차 — 페이지 진입 암호]
   - 페이지에 들어가는 즉시 전체 화면을 가리고 암호를 묻습니다 (요약정보 포함, 예외 없음).
     설비 페이지·홈(index.html)·PDF 뷰어 모두 동일하게 동작합니다.
+  - 단, 홈(index.html)은 앞에서 intro.js가 진입 인트로를 재생하므로 그것이 끝난 뒤에
+    암호창이 뜹니다 (window.dnkIntro.done 을 기다림). 인트로가 없는 페이지는 즉시 뜹니다.
 
   [2차 — 기술문서 등 민감 항목 암호]
   - <details class="section" data-lock="2"> 로 표시한 항목은 1차 암호를 통과해도 바로 열리지
@@ -205,9 +207,14 @@
   } catch (e) {}
   var needsTech = TECH_PDF_RE.test(decodeURIComponent(file));
 
-  var chain = isOk(KEY_1)
-    ? Promise.resolve(true)
-    : ask({ hash: HASH_1, key: KEY_1, title: "사내 전용 페이지입니다" });
+  // index.html은 gate.js 앞에서 intro.js가 진입 인트로를 재생한다. 인트로가 끝난 뒤에
+  // 암호창을 띄우기 위해 기다린다 (다른 페이지에는 window.dnkIntro가 없어 즉시 통과).
+  var afterIntro = Promise.resolve(window.dnkIntro && window.dnkIntro.done);
+
+  var chain = afterIntro.then(function () {
+    if (isOk(KEY_1)) return true;
+    return ask({ hash: HASH_1, key: KEY_1, title: "사내 전용 페이지입니다" });
+  });
 
   if (needsTech) {
     chain = chain.then(function () {
