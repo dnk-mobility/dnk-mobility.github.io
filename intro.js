@@ -2,7 +2,7 @@
   홈 화면(index.html) 진입 인트로 — QR 스캔 연출 + 브랜드 페이드
 
   - QR 조준선 위로 스캔 라인이 한 번 훑고 지나간 뒤, 브랜드명·제목이 떠오르고
-    시안 밑줄이 그어집니다. 전체 약 2.9초.
+    시안 밑줄이 그어집니다. 전체 약 4.3초 (재생 ~3.1초 + 페이드아웃 1.2초).
   - **암호창보다 먼저** 재생됩니다. 순서: QR 스캔 → 인트로 → 암호 → 인덱스.
     그래서 이 파일은 index.html에서 gate.js **앞에** 로드되어야 하며,
     끝나면 window.dnkIntro.done 이 resolve 되어 gate.js가 그때 암호창을 띄웁니다.
@@ -17,14 +17,16 @@
 
   이 파일은 index.html 에서만 로드됩니다 (설비 페이지 10개는 제외 — 매번 나오면 방해됨).
 
-  속도를 바꾸려면 아래 CSS의 animation delay/duration 과 HOLD_MS 를 함께 조정하세요.
+  속도를 바꾸려면 아래 CSS의 animation delay/duration 을 조정하세요. 종료 시점은
+  마지막 동작(밑줄)의 animationend 에 맞춰 자동으로 따라갑니다.
 */
 (function () {
   "use strict";
 
   var KEY = "dnk_intro_shown_v1";
-  var HOLD_MS = 2400; // 애니메이션 시작 ~ 페이드아웃 시작까지
-  var FADE_MS = 450;  // 페이드아웃 시간
+  var TAIL_MS = 300;     // 밑줄이 다 그어진 뒤 머무는 여운
+  var FADE_MS = 1200;    // 페이드아웃 시간
+  var TIMEOUT_MS = 5000; // animationend가 안 오는 경우를 대비한 안전장치
 
   function alreadyShown() {
     try {
@@ -78,9 +80,9 @@
     "#dnk-intro .rule{margin-top:13px;width:0;height:2px;background:#37c6e0;}" +
     "#dnk-intro.run .ret{animation:dnkRet .45s ease forwards;}" +
     "#dnk-intro.run .scan{animation:dnkScan 1.2s cubic-bezier(.4,0,.2,1) .28s forwards;}" +
-    "#dnk-intro.run .brand{animation:dnkUp .5s ease 1s forwards;}" +
-    "#dnk-intro.run .title{animation:dnkUp .5s ease 1.2s forwards;}" +
-    "#dnk-intro.run .rule{animation:dnkRule .55s cubic-bezier(.4,0,.2,1) 1.55s forwards;}" +
+    "#dnk-intro.run .brand{animation:dnkUp 1.2s ease 1s forwards;}" +
+    "#dnk-intro.run .title{animation:dnkUp 1.2s ease 1.2s forwards;}" +
+    "#dnk-intro.run .rule{animation:dnkRule 1s cubic-bezier(.4,0,.2,1) 1.55s forwards;}" +
     "@keyframes dnkRet{to{opacity:1;}}" +
     "@keyframes dnkScan{0%{top:0;opacity:0;}14%{opacity:1;}86%{opacity:1;}100%{top:100%;opacity:0;}}" +
     "@keyframes dnkUp{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:none;}}" +
@@ -119,5 +121,13 @@
 
   ov.addEventListener("click", finish);
   ov.classList.add("run");
-  setTimeout(finish, HOLD_MS);
+
+  // 마지막 동작(밑줄 그어짐)이 끝나는 시점에 맞춰 종료한다. 고정 타이머로 재면
+  // 최초 로드 때 CSS 애니메이션 시작이 수백 ms 늦어져 밑줄이 다 그어지기 전에
+  // 페이드아웃이 시작되는 경우가 있다.
+  var safety = setTimeout(finish, TIMEOUT_MS);
+  ov.querySelector(".rule").addEventListener("animationend", function () {
+    clearTimeout(safety);
+    setTimeout(finish, TAIL_MS);
+  });
 })();
