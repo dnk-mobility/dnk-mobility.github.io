@@ -19,6 +19,12 @@ import os
 import sys
 
 try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except AttributeError:
+    pass  # 파이프로 리다이렉트되는 등 reconfigure가 없는 스트림인 경우 그대로 둠
+
+try:
     import pymupdf
 except ImportError:
     sys.exit("pymupdf가 필요합니다:  pip install pymupdf")

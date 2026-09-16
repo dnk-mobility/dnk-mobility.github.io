@@ -103,13 +103,16 @@
     return new Promise(function (resolve) {
       var wrap = document.createElement("div");
       wrap.className = "dnk-gate" + (opts.dim ? " dim" : "");
+      wrap.setAttribute("role", "dialog");
+      wrap.setAttribute("aria-modal", "true");
+      wrap.setAttribute("aria-labelledby", "dnk-gate-title");
       wrap.innerHTML =
         '<div class="dnk-gate-card">' +
         '<div class="dnk-gate-brand">DnK MOBILITY · 후공정 생산기술팀</div>' +
-        '<div class="dnk-gate-title">' + opts.title + "</div>" +
+        '<div class="dnk-gate-title" id="dnk-gate-title">' + opts.title + "</div>" +
         (opts.sub ? '<div class="dnk-gate-sub">' + opts.sub + "</div>" : "") +
-        '<input class="dnk-gate-input" type="password" placeholder="접속 암호" autocomplete="off" />' +
-        '<div class="dnk-gate-err"></div>' +
+        '<input class="dnk-gate-input" type="password" placeholder="접속 암호" aria-label="접속 암호" autocomplete="off" />' +
+        '<div class="dnk-gate-err" role="alert"></div>' +
         '<button class="dnk-gate-btn">확인</button>' +
         (opts.cancelable ? '<button class="dnk-gate-cancel">취소</button>' : "") +
         "</div>";
