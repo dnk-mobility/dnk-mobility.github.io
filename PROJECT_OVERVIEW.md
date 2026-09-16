@@ -1,7 +1,7 @@
 ﻿# 공정 설비 정보관리 시스템 — 프로젝트 개요
 
 > 후공정 생산기술팀 · e-AWD 70kW MOTOR HOUSING ASS'Y 라인
-> 최종 업데이트: 2026-09-03 (기술문서 섹션 신설 + 2단계 암호 도입)
+> 최종 업데이트: 2026-09-16 (조직 계정으로 이전)
 
 이 문서는 현재 구축되어 있는 "공정 설비 정보관리 시스템"의 구조·설계·운영 방식을 상세히 기록한 기술 참고 문서입니다. 향후 유지보수나 확장 작업 시 이 문서를 먼저 참고하면 됩니다.
 
@@ -17,15 +17,17 @@
 
 | 항목 | 내용 |
 |---|---|
-| 저장소(repository) | [`dongnam959/dongnam959.github.io`](https://github.com/dongnam959/dongnam959.github.io) |
+| 저장소(repository) | [`dnk-mobility/dnk-mobility.github.io`](https://github.com/dnk-mobility/dnk-mobility.github.io) |
 | 브랜치 | `main` (단일 브랜치, 별도 dev/staging 브랜치 없음) |
-| 배포 방식 | GitHub Pages (저장소 이름이 `<계정>.github.io` 형식이면 자동으로 루트 URL에 배포됨) |
-| 실서비스 주소 | https://dongnam959.github.io/ |
+| 배포 방식 | GitHub Pages (저장소 이름이 `<계정 또는 조직>.github.io` 형식이면 자동으로 루트 URL에 배포됨) |
+| 실서비스 주소 | https://dnk-mobility.github.io/ |
 | 빌드 도구 | 없음 — 순수 정적 HTML/CSS/JS 파일. `main`에 push되면 수 분 내 자동 반영 |
 | 프레임워크 | 없음 (React/Vue 등 미사용, 바닐라 HTML + 인라인 `<style>` + 바닐라 JS) |
 | 로컬 개발 환경 | `C:\Users\user\Desktop\후공정 설비 QR 코드 스마트폰 관리 시스템\후공정 설비 정보 시스템 프로젝트` |
 
 배포 절차는 `git add` → `git commit` → `git push origin main` 세 단계뿐이며, 별도 배포 서버·CI 파이프라인이 없습니다.
+
+**2026-09-16, 개인 계정(`dongnam959`) → 조직 계정(`dnk-mobility`)으로 이전했습니다.** 이전 주소는 `dongnam959.github.io` (개인 계정 소유 저장소는 `dongnam959/dongnam959.github.io`, 특수 케이스로 루트 URL에 자동 배포되던 것). 조직으로 옮긴 이유: 개인 계정 하나에 시스템이 묶여 있으면 그 사람이 퇴사할 때 인수인계가 어려워짐. 조직은 공동 관리자를 여러 명 등록할 수 있어 이 문제가 없음. QR 라벨을 아직 현장에 부착하기 전이라 재출력 비용 없이 지금 옮길 수 있었음 (라벨 부착 후였다면 11개 전부 재출력해야 했음). 같은 이유로 신설 중인 "e-AWD 모터 하우징 누설값 관리 시스템"(별도 저장소)도 같은 조직으로 함께 이전.
 
 ---
 
@@ -213,7 +215,7 @@ QR을 찍으면 **암호창보다 먼저** 약 4.5초짜리 인트로가 재생�
 
 - 위치: `qr-codes/` 폴더, PNG 11개 (홈 1개 + 설비 10개)
 - 생성 방식: Python `qrcode` 라이브러리 (`qrcode.make(url, box_size=10, border=4)`)
-- URL ↔ 파일 매핑: 각 PNG 파일명이 대응 `.html` 파일명과 동일 (예: `laser-marking.png` → `https://dongnam959.github.io/laser-marking.html`)
+- URL ↔ 파일 매핑: 각 PNG 파일명이 대응 `.html` 파일명과 동일 (예: `laser-marking.png` → `https://dnk-mobility.github.io/laser-marking.html`)
 - `leak-pre-flow.png`는 index.html 개편 이후 추가로 재생성됨 (구 index.html 주소가 홈 화면으로 바뀌면서, 원래 그 페이지였던 조립전 유로계 리크검사기용 QR을 새 주소로 다시 생성)
 
 QR 자체는 URL을 담은 이미지일 뿐이며 접근 제어 기능은 없습니다. 실제 접근 제한은 §8의 암호 게이트가 담당합니다.
@@ -254,7 +256,7 @@ QR 자체는 URL을 담은 이미지일 뿐이며 접근 제어 기능은 없습
 
 ### 검색엔진 차단 (`robots.txt` + `noindex`, 2026-09-03 추가)
 
-**암호 게이트는 크롤러에 아무 효과가 없습니다.** `gate.js`는 브라우저에서 도는 클라이언트 JS라, JS를 실행하지 않고 HTML만 받아가는 쪽에는 걸리지 않습니다. 실측으로 확인됨 — 암호 없이 `GET https://dongnam959.github.io/leak-pre-full.html` 한 번에 24KB 전체가 응답되며, 여기에 마스터 샘플 보정값·설비주변온도·트러블슈팅 이력이 전부 들어 있습니다.
+**암호 게이트는 크롤러에 아무 효과가 없습니다.** `gate.js`는 브라우저에서 도는 클라이언트 JS라, JS를 실행하지 않고 HTML만 받아가는 쪽에는 걸리지 않습니다. 실측으로 확인됨(2026-09-03, 당시 주소 `dongnam959.github.io` 기준) — 암호 없이 `GET .../leak-pre-full.html` 한 번에 24KB 전체가 응답되며, 여기에 마스터 샘플 보정값·설비주변온도·트러블슈팅 이력이 전부 들어 있습니다.
 
 방치하면 네이버·구글에 사내 작업표준이 그대로 색인될 수 있어 두 겹으로 막았습니다.
 
