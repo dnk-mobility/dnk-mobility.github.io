@@ -235,7 +235,7 @@
 
   function goToEquipment(eq) {
     if (eq.file === currentFile()) {
-      addMessage({ from: "bot", text: "지금 보고 계신 페이지예요." });
+      addMessage({ from: "bot", text: "지금 보고 계신 페이지예요.", actions: quickChips() });
       return;
     }
     location.href = eq.file;
@@ -246,7 +246,7 @@
     actions.push({ label: "일상점검표 보기", run: function () { gotoSection(eq, "checklist"); } });
     if (eq.hasManual) actions.push({ label: "조작 매뉴얼 보기", run: function () { gotoSection(eq, "manual"); } });
     if (eq.theoryKey && THEORY[eq.theoryKey]) {
-      actions.push({ label: "공정 상식 보기", run: function () { addMessage({ from: "bot", text: THEORY[eq.theoryKey].text }); } });
+      actions.push({ label: "공정 상식 보기", run: function () { addMessage({ from: "bot", text: THEORY[eq.theoryKey].text, actions: quickChips() }); } });
     }
     return actions;
   }
@@ -287,14 +287,14 @@
       { label: "자주 묻는 질문", run: function () {
         addMessage({
           from: "bot", text: "궁금하신 걸 선택하세요.",
-          actions: FAQ.map(function (f) { return { label: f.q, run: function () { addMessage({ from: "bot", text: f.a }); } }; })
+          actions: FAQ.map(function (f) { return { label: f.q, run: function () { addMessage({ from: "bot", text: f.a, actions: quickChips() }); } }; })
         });
       } },
       { label: "공정 상식", run: function () {
         var keys = Object.keys(THEORY);
         addMessage({
           from: "bot", text: "어떤 공정이 궁금하세요?",
-          actions: keys.map(function (k) { return { label: THEORY[k].label, run: function () { addMessage({ from: "bot", text: THEORY[k].text }); } }; })
+          actions: keys.map(function (k) { return { label: THEORY[k].label, run: function () { addMessage({ from: "bot", text: THEORY[k].text, actions: quickChips() }); } }; })
         });
       } }
     ];
@@ -304,7 +304,7 @@
     var q = rawQ.trim();
 
     var faq = findFaq(q);
-    if (faq) return { from: "bot", text: faq.a };
+    if (faq) return { from: "bot", text: faq.a, actions: quickChips() };
 
     var matches = findEquipment(q);
     var hasTheoryWord = /원리|이론|왜\b|상식|무슨\s*원리|어떤\s*원리/.test(q);
@@ -363,6 +363,7 @@
 
   function processQuery(raw) {
     if (!raw.trim()) return;
+    clearMessages();
     addMessage({ from: "user", text: raw });
     addMessage(buildReply(raw));
   }
@@ -371,6 +372,12 @@
 
   var msgBody = null;
   var greeted = false;
+
+  // 이전 질문/답변(그리고 그 안의 버튼 목록)을 지우고 새 응답만 남긴다 — 버튼을
+  // 눌러도 패널이 닫히지 않고 계속 아래로 쌓여 세로로 길어지는 문제를 막기 위함.
+  function clearMessages() {
+    if (msgBody) msgBody.innerHTML = "";
+  }
 
   function addMessage(msg) {
     if (!msgBody) return;
@@ -388,7 +395,10 @@
         b.type = "button";
         b.className = "dnk-asst-action";
         b.textContent = a.label;
-        b.addEventListener("click", a.run);
+        b.addEventListener("click", function () {
+          clearMessages();
+          a.run();
+        });
         actionsWrap.appendChild(b);
       });
       el.appendChild(actionsWrap);
