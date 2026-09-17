@@ -1,7 +1,7 @@
 ﻿# 공정 설비 정보관리 시스템 — 프로젝트 개요
 
 > 후공정 생산기술팀 · e-AWD 70kW MOTOR HOUSING ASS'Y 라인
-> 최종 업데이트: 2026-09-16 (조직 계정으로 이전)
+> 최종 업데이트: 2026-09-17 (디자인·기능·보안 정밀 재점검 및 최적화)
 
 이 문서는 현재 구축되어 있는 "공정 설비 정보관리 시스템"의 구조·설계·운영 방식을 상세히 기록한 기술 참고 문서입니다. 향후 유지보수나 확장 작업 시 이 문서를 먼저 참고하면 됩니다.
 
@@ -156,14 +156,14 @@ QR을 찍으면 **암호창보다 먼저** 약 4.5초짜리 인트로가 재생�
 
 | 설비 | 필요 PDF 파일명 | 현재 상태 |
 |---|---|---|
-| `leak-pre-flow.html` | `partlist.pdf`, `machine-spec.pdf`, `manual.pdf`, `ls-r700-manual.pdf` | ✅ 4개 모두 저장소에 존재 (최초 업로드분) |
+| `leak-pre-flow.html` | `partlist.pdf`, `machine-spec.pdf`, `manual.pdf`, `ls-r700-manual-install.pdf`, `ls-r700-manual-operation.pdf` | ✅ 모두 저장소에 존재 (최초 업로드분 + 2026-09-17 매뉴얼 분할) |
 | `laser-marking.html` | `laser-marking-partlist.pdf`, `laser-marking-spec.pdf`, `laser-marking-manual.pdf` | ⬜ 미업로드 |
-| `leak-pre-full.html` | `leak-pre-full-partlist.pdf`, `leak-pre-full-spec.pdf`, `leak-pre-full-manual.pdf`, `ls-r700-manual.pdf`(공용) | ⬜ 미업로드 |
+| `leak-pre-full.html` | `leak-pre-full-partlist.pdf`, `leak-pre-full-spec.pdf`, `leak-pre-full-manual.pdf`, `ls-r700-manual-install.pdf`(공용), `ls-r700-manual-operation.pdf`(공용) | ⬜ 미업로드 (자체 3종 기준, 공용 매뉴얼 2종은 이미 존재) |
 | `nipple-oil-press.html` | `nipple-oil-partlist.pdf`, `nipple-oil-spec.pdf`, `nipple-oil-manual.pdf` | ⬜ 미업로드 |
 | `cap-sealing-press.html` | `cap-sealing-partlist.pdf`, `cap-sealing-spec.pdf`, `cap-sealing-manual.pdf` | ⬜ 미업로드 |
 | `taper-plug-fastening.html` | `taper-fastening-partlist.pdf`, `taper-fastening-spec.pdf`, `taper-fastening-manual.pdf` | ⬜ 미업로드 |
 | `dowel-pin-press.html` | `dowel-pin-partlist.pdf`, `dowel-pin-spec.pdf`, `dowel-pin-manual.pdf` | ⬜ 미업로드 |
-| `leak-post-flow.html` | `leak-post-flow-partlist.pdf`, `leak-post-flow-spec.pdf`, `leak-post-flow-manual.pdf`, `ls-r700-manual.pdf`(공용) | ⬜ 미업로드 |
+| `leak-post-flow.html` | `leak-post-flow-partlist.pdf`, `leak-post-flow-spec.pdf`, `leak-post-flow-manual.pdf`, `ls-r700-manual-install.pdf`(공용), `ls-r700-manual-operation.pdf`(공용) | ⬜ 미업로드 (자체 3종 기준, 공용 매뉴얼 2종은 이미 존재) |
 | `leak-post-full.html` | `leak-post-full-partlist.pdf`, `leak-post-full-spec.pdf`, `leak-post-full-manual.pdf`, `ls-r902-manual.pdf` | ⬜ 미업로드 |
 | `taper-plug-height.html` | `taper-height-partlist.pdf`, `taper-height-spec.pdf`, `taper-height-manual.pdf` | ⬜ 미업로드 |
 
@@ -199,6 +199,8 @@ QR을 찍으면 **암호창보다 먼저** 약 4.5초짜리 인트로가 재생�
 | 업로드 전 확인 | 재압축본을 스마트폰 화면에서 열어 표·도면 글자 가독성 확인 후 원본 파일명으로 교체 |
 
 실측 근거 (기존 파일 2개): `machine-spec.pdf` 4.82→**2.63MB(45%↓)** / `ls-r700-manual.pdf` 6.47→9.16MB로 **오히려 커져 원본 유지** (파일마다 결과가 달라 일괄 적용 금지, 도구가 자동 판정).
+
+**2026-09-17**: `machine-spec.pdf`는 위 압축본(2.63MB)으로 교체 완료 — 이전까지 저장소에는 압축 전 원본이 그대로 커밋돼 있었음. `ls-r700-manual.pdf`(6.47MB, 5MB 상한 초과)는 재압축이 안 통하는 파일이라, PDF 내장 목차의 "설치매뉴얼/조작매뉴얼" 경계(43p)로 분할 후 각각 재압축해 `ls-r700-manual-install.pdf`(1.74MB) / `ls-r700-manual-operation.pdf`(3.69MB)로 교체 (상세: `개선이력.md` 2026-09-17).
 
 ### 뷰어 (다운로드 버튼 없이 보기 전용, 2026-08-31 추가)
 
@@ -289,7 +291,10 @@ QR 자체는 URL을 담은 이미지일 뿐이며 접근 제어 기능은 없습
 
 | 커밋 | 날짜 | 내용 |
 |---|---|---|
-| (최신) | 2026-09-03 | 개선이력.md·PDF 압축 기준·`tools/compress_pdf.py` 추가, 문서 갱신 |
+| (최신) | 2026-09-17 | `ls-r700-manual.pdf`(5MB 상한 초과)를 설치/조작 매뉴얼로 분할(1.74MB/3.69MB), 3개 페이지 첨부문서 링크 갱신 |
+| `d720f1b` | 2026-09-17 | `span`>`div` 무효 중첩 정정(11개 파일 64곳), JS 비활성화 대비 noscript 추가, 게이트 접근성(`role`/`aria-*`) 보강, `compress_pdf.py` 인코딩 크래시 수정, `machine-spec.pdf` 압축본 반영(45%↓) |
+| `7e825df` | 2026-09-16 | 저장소를 개인 계정 → `dnk-mobility` 조직으로 이전(`dnk-mobility.github.io`), QR코드 11종 재생성 |
+| `7c582f5` | 2026-09-03 | 개선이력.md·PDF 압축 기준·`tools/compress_pdf.py` 추가, 문서 갱신 |
 | `1f9c11f` | 2026-09-03 | 공용 `styles.css` 추출 (설비 10개 페이지 중복 CSS 제거), 구번호 참조 3건 정정 |
 | `aac8a5f` | 2026-09-03 | 시스템 재점검 — robots.txt+noindex, 핀치 줌 허용, favicon, 404 페이지 (상세: `개선이력.md`) |
 | `690df6c`~`7f0547a` | 2026-09-03 | 인트로 속도 조정 (텍스트 2초, 완성 후 정지 1초, 페이드아웃 1.2초) |
