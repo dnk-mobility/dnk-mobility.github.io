@@ -10,7 +10,7 @@
     보이지 않는다(문서 루트의 visibility:hidden을 그대로 물려받음).
   - 섹션 자동 펼침은 새 id를 추가하지 않고 각 <summary> 텍스트로 찾는다 — 10개
     설비 페이지의 섹션 제목 문구가 전부 동일하다는 것을 확인하고 설계함.
-  - 잠금 섹션(`data-lock="2"`, 기술문서·마스터샘플)은 강제로 펼치지 않고 스크롤만
+  - 잠금 섹션(`data-lock="2"`, 기술문서)은 강제로 펼치지 않고 스크롤만
     한다 — 여기서 직접 열어버리면 gate.js의 2차 암호 확인을 우회하게 되므로 반드시
     지켜야 하는 제약.
   - 다른 페이지의 섹션으로 안내할 때는 `?goto=<토픽키>`를 붙여 이동시키고, 그
@@ -72,7 +72,6 @@
     { key: "checklist", label: "설비 일상점검표", match: "일상점검표", keywords: ["점검표", "일상점검", "점검"] },
     { key: "manual", label: "조작 매뉴얼 요약", match: "조작 매뉴얼", keywords: ["조작매뉴얼", "조작 매뉴얼", "매뉴얼", "조작법"] },
     { key: "trouble", label: "트러블슈팅 이력", match: "트러블슈팅", keywords: ["트러블슈팅", "고장이력", "불량사례"] },
-    { key: "history", label: "마스터 샘플 · 보정 이력", match: "마스터 샘플", keywords: ["마스터샘플", "마스터 샘플", "보정이력", "보정 이력"], locked: true },
     { key: "notice", label: "최근 공지", match: "최근 공지", keywords: ["공지", "공지사항"] }
   ];
 
@@ -347,7 +346,7 @@
         from: "bot",
         text: "어떤 설비의 \"" + topic.label + "\"를 찾으세요? 설비를 선택해주세요.",
         actions: EQUIPMENT.filter(function (eq) {
-          return (topic.key !== "manual" && topic.key !== "history") || eq.hasManual;
+          return topic.key !== "manual" || eq.hasManual;
         }).map(function (eq) { return { label: eq.name, run: function () { gotoSection(eq, topic.key); } }; })
       };
     }
