@@ -209,7 +209,13 @@
 
   function gotoSection(eq, topicKey) {
     if (eq.file === currentFile()) {
-      openOrScrollSection(topicKey);
+      var opened = openOrScrollSection(topicKey);
+      var topic = topicByKey(topicKey);
+      var label = topic ? topic.label : topicKey;
+      var text = opened
+        ? "\"" + label + "\" 항목으로 이동했어요." + (topic && topic.locked ? " 잠금 항목이라 눌러서 암호를 확인해야 볼 수 있어요." : "")
+        : "이 페이지에는 \"" + label + "\" 항목이 없어요.";
+      addMessage({ from: "bot", text: text, actions: quickChips() });
     } else {
       location.href = eq.file + "?goto=" + topicKey;
     }
@@ -323,7 +329,7 @@
       if (hasTheoryWord && eq.theoryKey && THEORY[eq.theoryKey]) {
         return {
           from: "bot", text: THEORY[eq.theoryKey].text,
-          actions: [{ label: eq.name + " 페이지 열기 →", run: function () { goToEquipment(eq); } }]
+          actions: [{ label: eq.name + " 페이지 열기 →", run: function () { goToEquipment(eq); } }].concat(quickChips())
         };
       }
       if (topic) return replyWithSectionJump(eq, topic);
@@ -412,6 +418,9 @@
     style.textContent =
       ".dnk-asst-btn{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:54px;height:54px;border-radius:50%;background:#0a2540;color:#fff;border:none;box-shadow:0 6px 18px rgba(10,37,64,.28),0 2px 6px rgba(10,37,64,.18);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:9000;padding:0;transition:transform .15s ease,box-shadow .15s ease;}" +
       ".dnk-asst-btn:active{transform:scale(.94);}" +
+      /* 페이지 끝까지 스크롤했을 때 버튼이 푸터 문구(문의처 안내)를 가리는 문제가
+         있어, 모든 페이지 하단에 버튼 높이만큼 여백을 확보한다. */
+      "footer{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!important;}" +
       ".dnk-asst-panel{position:fixed;right:16px;bottom:calc(78px + env(safe-area-inset-bottom,0px));width:min(360px,calc(100vw - 32px));max-height:min(70vh,520px);background:#fff;border-radius:14px;box-shadow:0 12px 32px rgba(10,37,64,.22),0 4px 10px rgba(10,37,64,.12);display:flex;flex-direction:column;overflow:hidden;z-index:9000;opacity:0;transform:translateY(12px) scale(.98);pointer-events:none;transition:opacity .18s ease,transform .18s ease;}" +
       ".dnk-asst-panel.open{opacity:1;transform:none;pointer-events:auto;}" +
       ".dnk-asst-head{background:#0a2540;color:#fff;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;font-size:13.5px;font-weight:700;flex-shrink:0;}" +
