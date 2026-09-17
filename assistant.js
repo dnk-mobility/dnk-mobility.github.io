@@ -307,7 +307,7 @@
     if (faq) return { from: "bot", text: faq.a, actions: quickChips() };
 
     var matches = findEquipment(q);
-    var hasTheoryWord = /원리|이론|왜\b|상식|무슨\s*원리|어떤\s*원리/.test(q);
+    var hasTheoryWord = /원리|이론|왜|상식/.test(q);
     var topic = findTopic(q);
 
     if (matches.length > 1) {
