@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-설비 부착용 QR 라벨(100mm x 100mm) 인쇄 파일 생성.
+설비 부착용 QR 라벨(70mm x 100mm) 인쇄 파일 생성.
 
     python tools/make_labels.py
 
-결과: qr-codes/설비QR라벨_100x100mm_A4인쇄용.pdf
-    - 라벨 1장 = 정확히 100mm x 100mm
+결과: qr-codes/설비QR라벨_70x100mm_A4인쇄용.pdf
+    - 라벨 1장 = 정확히 가로 70mm x 세로 100mm
     - A4 한 장에 4개(2x2 배치), 설비 10개소이므로 총 3페이지
     - 각 라벨 모서리에 재단선, 페이지마다 수록 설비·인쇄 주의사항 표기
 
@@ -51,9 +51,11 @@ EQUIPMENT = [
     (200, "테이퍼 플러그 돌출높이 검사기", "taper-plug-height.html"),
 ]
 
-LABEL_MM = 100.0          # 라벨 한 변 (실제 인쇄 크기)
-LABEL_PX = 1200           # 라벨 렌더링 해상도 (12px/mm ≈ 305dpi)
-PXMM = LABEL_PX / LABEL_MM
+WIDTH_MM = 70.0           # 라벨 가로 (실제 인쇄 크기)
+HEIGHT_MM = 100.0         # 라벨 세로 (실제 인쇄 크기)
+PXMM = 12                 # 렌더링 해상도 (12px/mm ≈ 305dpi) — 100x100mm 버전과 동일 밀도 유지
+WIDTH_PX = round(WIDTH_MM * PXMM)
+HEIGHT_PX = round(HEIGHT_MM * PXMM)
 
 NAVY = (10, 37, 64)
 CYAN = (55, 198, 224)
@@ -64,7 +66,7 @@ FONT_DIR = "C:/Windows/Fonts/"
 F_BOLD, F_REG = "malgunbd.ttf", "malgun.ttf"
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT_PDF = os.path.join(ROOT, "qr-codes", "설비QR라벨_100x100mm_A4인쇄용.pdf")
+OUT_PDF = os.path.join(ROOT, "qr-codes", "설비QR라벨_70x100mm_A4인쇄용.pdf")
 
 # ===================== 라벨 렌더링 =====================
 
@@ -113,9 +115,9 @@ def wrap_text(draw, text, fnt, max_width_px):
     return lines
 
 def render_label(no, name, file):
-    img = Image.new("RGB", (LABEL_PX, LABEL_PX), NAVY)
+    img = Image.new("RGB", (WIDTH_PX, HEIGHT_PX), NAVY)
     d = ImageDraw.Draw(img)
-    cx = LABEL_PX / 2
+    cx = WIDTH_PX / 2
     cur = 4.5
 
     f_scan = font(F_BOLD, mm(3.0))
@@ -141,7 +143,7 @@ def render_label(no, name, file):
     cur += text_h_mm(f_no) + 1.8
 
     f_name = font(F_REG, mm(2.7))
-    lines = wrap_text(d, name, f_name, LABEL_PX - mm(8))
+    lines = wrap_text(d, name, f_name, WIDTH_PX - mm(8))
     for i, ln in enumerate(lines):
         center_text(d, cx, mm(cur), ln, f_name, BRAND_SUB)
         cur += text_h_mm(f_name) + (0.9 if i < len(lines) - 1 else 0)
@@ -155,16 +157,16 @@ def render_label(no, name, file):
     center_text(d, cx, mm(cur), "DnK MOBILITY", f_brand, WHITE, tracking=mm(0.12))
     cur += text_h_mm(f_brand)
 
-    if cur > LABEL_MM:
-        raise SystemExit(f"[No.{no}] 내용이 라벨을 넘칩니다 ({cur:.1f}mm > {LABEL_MM:.0f}mm) — 글꼴 크기를 줄이세요")
-    print(f"  No.{no:<4} {name}  (본문 {cur:.1f}mm / {LABEL_MM:.0f}mm)")
+    if cur > HEIGHT_MM:
+        raise SystemExit(f"[No.{no}] 내용이 라벨을 넘칩니다 ({cur:.1f}mm > {HEIGHT_MM:.0f}mm) — 글꼴 크기를 줄이세요")
+    print(f"  No.{no:<4} {name}  (본문 {cur:.1f}mm / {HEIGHT_MM:.0f}mm)")
     return img
 
 # ===================== A4 조판 =====================
 
 PT_MM = 72 / 25.4
 A4_W, A4_H = 210 * PT_MM, 297 * PT_MM
-CELL = LABEL_MM * PT_MM
+CELL_W, CELL_H = WIDTH_MM * PT_MM, HEIGHT_MM * PT_MM
 GUTTER = 4 * PT_MM
 COLS, ROWS = 2, 2
 PER_PAGE = COLS * ROWS
@@ -175,7 +177,7 @@ C_NAVY = (10 / 255, 37 / 255, 64 / 255)
 C_GRAY = (0.42, 0.45, 0.5)
 
 def build_pdf():
-    grid_w = CELL * COLS + GUTTER * (COLS - 1)
+    grid_w = CELL_W * COLS + GUTTER * (COLS - 1)
     left = (A4_W - grid_w) / 2
     top = 28 * PT_MM
 
@@ -186,7 +188,7 @@ def build_pdf():
         page = doc.new_page(width=A4_W, height=A4_H)
         nos = ", ".join("No.%d" % e[0] for e in group)
         page.insert_text((left, 16 * PT_MM),
-                         f"설비 QR 라벨 100x100mm — {pno}/{len(groups)} 페이지  ({nos})",
+                         f"설비 QR 라벨 70x100mm — {pno}/{len(groups)} 페이지  ({nos})",
                          fontsize=11, fontname="kbold", fontfile=KFONT_BOLD, color=C_NAVY)
         page.insert_text((left, 21.5 * PT_MM),
                          "재단선(모서리 ㄱ자)을 따라 잘라서 설비에 부착하세요.",
@@ -194,9 +196,9 @@ def build_pdf():
 
         for idx, (no, name, file) in enumerate(group):
             r, c = divmod(idx, COLS)
-            x0 = left + c * (CELL + GUTTER)
-            y0 = top + r * (CELL + GUTTER)
-            x1, y1 = x0 + CELL, y0 + CELL
+            x0 = left + c * (CELL_W + GUTTER)
+            y0 = top + r * (CELL_H + GUTTER)
+            x1, y1 = x0 + CELL_W, y0 + CELL_H
 
             buf = io.BytesIO()
             render_label(no, name, file).save(buf, format="PNG")
@@ -209,10 +211,10 @@ def build_pdf():
                                color=(0, 0, 0), width=0.5)
 
         page.insert_text((left, A4_H - 28 * PT_MM),
-                         "인쇄 시 반드시 '실제 크기(100%)'로 설정하세요 — '여백에 맞춤'을 켜면 100mm가 안 나옵니다.",
+                         "인쇄 시 반드시 '실제 크기(100%)'로 설정하세요 — '여백에 맞춤'을 켜면 사이즈가 안 맞습니다.",
                          fontsize=9, fontname="kbold", fontfile=KFONT_BOLD, color=C_NAVY)
         page.insert_text((left, A4_H - 23 * PT_MM),
-                         "라벨 1장 = 가로 100mm x 세로 100mm · 인쇄 후 자로 한 변을 재서 100mm인지 확인하면 확실합니다.",
+                         "라벨 1장 = 가로 70mm x 세로 100mm · 인쇄 후 자로 재서 크기를 확인하면 확실합니다.",
                          fontsize=8.5, fontname="kreg", fontfile=KFONT, color=C_GRAY)
 
     # 한글 폰트를 페이지마다 통째로 임베드하면 파일이 100MB를 넘으므로 실제 쓰인 글자만 남긴다
