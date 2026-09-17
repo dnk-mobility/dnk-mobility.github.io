@@ -2,8 +2,6 @@
   공정 설비 상세 페이지 10개가 공유하는 유일한 스타일시트입니다 (2026-09-03 추출).
   - 이전에는 같은 <style> 블록이 10개 파일에 복사되어 있어, 디자인 수정마다
     전 파일을 일괄 고쳐야 했습니다. 이제 이 파일 하나만 고치면 전 페이지에 반영됩니다.
-  - table.hist(마스터 샘플 이력 표) 규칙은 리크테스터 4개소에만 쓰이지만,
-    해당 마크업이 없는 페이지에서는 그냥 무시되므로 공용으로 합쳤습니다.
   - 홈(index.html)·PDF 뷰어(pdf-viewer.html)는 레이아웃이 달라 각자의 <style>을 유지합니다.
 */
   :root{
@@ -267,21 +265,6 @@
   }
   table.check td:first-child,table.check th:first-child{text-align:left;font-size:12px;}
   table.check th{background:var(--navy);color:#fff;font-size:10.5px;font-weight:700;}
-
-  .table-scroll{overflow-x:auto;margin-top:4px;-webkit-overflow-scrolling:touch;}
-  table.hist{border-collapse:collapse;font-size:11.5px;white-space:nowrap;}
-  table.hist th,table.hist td{
-    border:1px solid var(--gray-300);padding:7px 8px;text-align:center;
-  }
-  table.hist th{background:var(--navy);color:#fff;font-size:10px;font-weight:700;white-space:normal;line-height:1.3;}
-  table.hist td{color:var(--gray-900);}
-  table.hist th,table.hist td{padding:9px 10px;}
-  table.hist th:not(.note-h),table.hist td:not(.note){min-width:64px;}
-  table.hist th.sub{min-width:52px;font-size:10px;}
-  table.hist th.temp-h{min-width:84px;white-space:nowrap;}
-  table.hist th.note-h,table.hist td.note{min-width:44px;}
-  table.hist th.note-h{white-space:nowrap;}
-  table.hist td.note{text-align:left;color:var(--gray-700);white-space:normal;padding:9px 6px;}
 
   .doc-list{display:flex;flex-direction:column;gap:8px;}
   .doc-item{
