@@ -1,7 +1,7 @@
 ﻿# 공정 설비 정보관리 시스템 — 프로젝트 개요
 
 > 후공정 생산기술팀 · e-AWD 70kW MOTOR HOUSING ASS'Y 라인
-> 최종 업데이트: 2026-09-18 (맨 위로 이동 버튼 추가 + 설비 9개소 트러블슈팅 이력 대량 보강(엑셀 원본 대조로 정정 포함) + 마스터 샘플·보정 이력 섹션을 누설값관리시스템으로 이관) — 이전: 2026-09-17 (정밀 재점검·최적화 + 챗봇형 안내 위젯 + 재발방지 체크리스트 + 설비 부착용 QR 라벨 확정(이후 70×100mm로 재조정) + 진입 인트로 전 진입점 확장)
+> 최종 업데이트: 2026-09-18 (첨부문서를 설비별 폴더 구조로 재편 + 맨 위로 이동 버튼 추가 + 설비 9개소 트러블슈팅 이력 대량 보강(엑셀 원본 대조로 정정 포함) + 마스터 샘플·보정 이력 섹션을 누설값관리시스템으로 이관) — 이전: 2026-09-17 (정밀 재점검·최적화 + 챗봇형 안내 위젯 + 재발방지 체크리스트 + 설비 부착용 QR 라벨 확정(이후 70×100mm로 재조정) + 진입 인트로 전 진입점 확장)
 
 이 문서는 현재 구축되어 있는 "공정 설비 정보관리 시스템"의 구조·설계·운영 방식을 상세히 기록한 기술 참고 문서입니다. 향후 유지보수나 확장 작업 시 이 문서를 먼저 참고하면 됩니다.
 
@@ -155,41 +155,60 @@ QR을 찍으면 **암호창보다 먼저** 약 4.5초짜리 인트로가 재생�
 
 ## 6. 첨부 문서 (PDF) 체계
 
-각 설비 페이지 "② 첨부 문서" 섹션에서 아래 파일명을 프로젝트 루트에서 직접 찾습니다 (하위 폴더 없음).
+**2026-09-18부터 설비별 폴더로 관리합니다.** 전에는 프로젝트 루트에 파일을 전부 평면으로 뒀는데, 업로드할 PDF가 46개(첨부문서 26 + 기술문서 20)나 되면 나중에 뭐가 뭔지 헷갈릴 것 같다는 판단으로, 실제 업로드가 본격적으로 시작되기 전에 아래처럼 정리했습니다.
 
-| 설비 | 필요 PDF 파일명 | 현재 상태 |
-|---|---|---|
-| `leak-pre-flow.html` | `partlist.pdf`, `machine-spec.pdf`, `manual.pdf`, `ls-r700-manual-install.pdf`, `ls-r700-manual-operation.pdf` | ✅ 모두 저장소에 존재 (최초 업로드분 + 2026-09-17 매뉴얼 분할) |
-| `laser-marking.html` | `laser-marking-partlist.pdf`, `laser-marking-spec.pdf`, `laser-marking-manual.pdf` | ⬜ 미업로드 |
-| `leak-pre-full.html` | `leak-pre-full-partlist.pdf`, `leak-pre-full-spec.pdf`, `leak-pre-full-manual.pdf`, `ls-r700-manual-install.pdf`(공용), `ls-r700-manual-operation.pdf`(공용) | ⬜ 미업로드 (자체 3종 기준, 공용 매뉴얼 2종은 이미 존재) |
-| `nipple-oil-press.html` | `nipple-oil-partlist.pdf`, `nipple-oil-spec.pdf`, `nipple-oil-manual.pdf` | ⬜ 미업로드 |
-| `cap-sealing-press.html` | `cap-sealing-partlist.pdf`, `cap-sealing-spec.pdf`, `cap-sealing-manual.pdf` | ⬜ 미업로드 |
-| `taper-plug-fastening.html` | `taper-fastening-partlist.pdf`, `taper-fastening-spec.pdf`, `taper-fastening-manual.pdf` | ⬜ 미업로드 |
-| `dowel-pin-press.html` | `dowel-pin-partlist.pdf`, `dowel-pin-spec.pdf`, `dowel-pin-manual.pdf` | ⬜ 미업로드 |
-| `leak-post-flow.html` | `leak-post-flow-partlist.pdf`, `leak-post-flow-spec.pdf`, `leak-post-flow-manual.pdf`, `ls-r700-manual-install.pdf`(공용), `ls-r700-manual-operation.pdf`(공용) | ⬜ 미업로드 (자체 3종 기준, 공용 매뉴얼 2종은 이미 존재) |
-| `leak-post-full.html` | `leak-post-full-partlist.pdf`, `leak-post-full-spec.pdf`, `leak-post-full-manual.pdf`, `ls-r902-manual.pdf` | ⬜ 미업로드 |
-| `taper-plug-height.html` | `taper-height-partlist.pdf`, `taper-height-spec.pdf`, `taper-height-manual.pdf` | ⬜ 미업로드 |
+```
+첨부문서/
+  110_레이저마킹기/
+  120_조립전유로계리크검사기/
+  130_조립전전체계리크검사기/
+  140_오일니쁠압입기·테이퍼플러그체결기(1개소)/
+  150_씰캡압입기/
+  160_테이퍼플러그체결기(5개소)/
+  170_다월핀압입기/
+  180_조립후유로계리크검사기/
+  190_조립후전체계리크검사기/
+  200_테이퍼플러그돌출높이검사기/
+  공용_LS-R700디텍터/   ← 120·130·180이 같은 디텍터 매뉴얼(설치/조작)을 공유해서 씀
+```
 
-링크는 이미 페이지에 걸려 있으므로, 위 파일명 그대로 PDF를 프로젝트 루트에 넣고 `git add`/`commit`/`push`만 하면 "② 첨부 문서" 버튼이 즉시 작동합니다.
+- 폴더명 앞에 **공정No.**를 붙여 사이트에 보이는 순서와 그대로 맞춤.
+- **파일명은 폴더로 옮긴 뒤에도 기존 설비 접두어 규칙을 그대로 유지**(예: `laser-marking-partlist.pdf`) — 폴더 밖으로 파일이 나와도 어떤 설비 건지 바로 알아볼 수 있게 이중 안전장치.
+- 링크는 `pdf-viewer.html?file=첨부문서/<폴더>/<파일명>.pdf` 형태로 이미 전부 걸려 있음. 브라우저가 한글·특수문자(`·`, `(` `)` 등)를 자동으로 퍼센트 인코딩해서 요청하므로 별도 인코딩 처리 불필요(실측 확인: `%EC%B2%A8...` 형태로 정상 요청되고 200 OK 응답).
 
-### 기술문서 PDF (③ 기술문서 섹션, 2026-09-03 신설)
+| 설비 | 폴더 | 필요 PDF 파일명 | 현재 상태 |
+|---|---|---|---|
+| `leak-pre-flow.html` | `120_조립전유로계리크검사기/` | `leak-pre-flow-partlist.pdf`, `leak-pre-flow-spec.pdf`, `leak-pre-flow-manual.pdf` + 공용 폴더의 `ls-r700-manual-install.pdf`, `ls-r700-manual-operation.pdf` | ✅ 모두 저장소에 존재 (최초 업로드분 + 2026-09-17 매뉴얼 분할, 2026-09-18 폴더 이동·개명) |
+| `laser-marking.html` | `110_레이저마킹기/` | `laser-marking-partlist.pdf`, `laser-marking-spec.pdf`, `laser-marking-manual.pdf` | ⬜ 미업로드 |
+| `leak-pre-full.html` | `130_조립전전체계리크검사기/` | `leak-pre-full-partlist.pdf`, `leak-pre-full-spec.pdf`, `leak-pre-full-manual.pdf` + 공용 폴더의 매뉴얼 2종 | ⬜ 미업로드 (자체 3종 기준, 공용 매뉴얼 2종은 이미 존재) |
+| `nipple-oil-press.html` | `140_오일니쁠압입기·테이퍼플러그체결기(1개소)/` | `nipple-oil-partlist.pdf`, `nipple-oil-spec.pdf`, `nipple-oil-manual.pdf` | ⬜ 미업로드 |
+| `cap-sealing-press.html` | `150_씰캡압입기/` | `cap-sealing-partlist.pdf`, `cap-sealing-spec.pdf`, `cap-sealing-manual.pdf` | ⬜ 미업로드 |
+| `taper-plug-fastening.html` | `160_테이퍼플러그체결기(5개소)/` | `taper-fastening-partlist.pdf`, `taper-fastening-spec.pdf`, `taper-fastening-manual.pdf` | ⬜ 미업로드 |
+| `dowel-pin-press.html` | `170_다월핀압입기/` | `dowel-pin-partlist.pdf`, `dowel-pin-spec.pdf`, `dowel-pin-manual.pdf` | ⬜ 미업로드 |
+| `leak-post-flow.html` | `180_조립후유로계리크검사기/` | `leak-post-flow-partlist.pdf`, `leak-post-flow-spec.pdf`, `leak-post-flow-manual.pdf` + 공용 폴더의 매뉴얼 2종 | ⬜ 미업로드 (자체 3종 기준, 공용 매뉴얼 2종은 이미 존재) |
+| `leak-post-full.html` | `190_조립후전체계리크검사기/` | `leak-post-full-partlist.pdf`, `leak-post-full-spec.pdf`, `leak-post-full-manual.pdf`, `ls-r902-manual.pdf`(이 설비 전용, 공용 아님) | ⬜ 미업로드 |
+| `taper-plug-height.html` | `200_테이퍼플러그돌출높이검사기/` | `taper-height-partlist.pdf`, `taper-height-spec.pdf`, `taper-height-manual.pdf` | ⬜ 미업로드 |
 
-전 설비 10개소 공통으로 아래 2개 파일을 찾습니다. 파일명 규칙은 **`<설비 접두어>-circuit.pdf`(설비 전기회로도) / `<설비 접두어>-drawing.pdf`(기계도면)** 이며, 접두어는 위 표의 PART LIST 파일명과 동일합니다 (예외: `leak-pre-flow.html`은 첨부문서만 접두어 없는 최초 파일명을 쓰므로, 기술문서는 `leak-pre-flow-circuit.pdf` / `leak-pre-flow-drawing.pdf` 사용).
+링크는 이미 페이지에 걸려 있으므로, 위 표의 **폴더 안에** 파일명 그대로 PDF를 넣고 `git add`/`commit`/`push`만 하면 "② 첨부 문서" 버튼이 즉시 작동합니다.
 
-| 설비 페이지 | 전기회로도 | 기계도면 |
-|---|---|---|
-| `laser-marking.html` | `laser-marking-circuit.pdf` | `laser-marking-drawing.pdf` |
-| `leak-pre-flow.html` | `leak-pre-flow-circuit.pdf` | `leak-pre-flow-drawing.pdf` |
-| `leak-pre-full.html` | `leak-pre-full-circuit.pdf` | `leak-pre-full-drawing.pdf` |
-| `nipple-oil-press.html` | `nipple-oil-circuit.pdf` | `nipple-oil-drawing.pdf` |
-| `cap-sealing-press.html` | `cap-sealing-circuit.pdf` | `cap-sealing-drawing.pdf` |
-| `taper-plug-fastening.html` | `taper-fastening-circuit.pdf` | `taper-fastening-drawing.pdf` |
-| `dowel-pin-press.html` | `dowel-pin-circuit.pdf` | `dowel-pin-drawing.pdf` |
-| `leak-post-flow.html` | `leak-post-flow-circuit.pdf` | `leak-post-flow-drawing.pdf` |
-| `leak-post-full.html` | `leak-post-full-circuit.pdf` | `leak-post-full-drawing.pdf` |
-| `taper-plug-height.html` | `taper-height-circuit.pdf` | `taper-height-drawing.pdf` |
+### 기술문서 PDF (③ 기술문서 섹션, 2026-09-03 신설, 2026-09-18 폴더 구조 반영)
 
-20개 전부 미업로드 상태입니다. **파일명 규칙(`-circuit.pdf` / `-drawing.pdf`)이 곧 2차 암호 적용 기준**이므로 (`gate.js`의 `TECH_PDF_RE`), 다른 이름을 쓰면 뷰어 직접 접근 시 2차 암호가 걸리지 않습니다.
+전 설비 10개소 공통으로 각자 폴더 안에서 아래 2개 파일을 찾습니다. 파일명 규칙은 **`<설비 접두어>-circuit.pdf`(설비 전기회로도) / `<설비 접두어>-drawing.pdf`(기계도면)** 이며, 접두어는 위 표의 PART LIST 파일명과 동일합니다.
+
+| 설비 페이지 | 폴더 | 전기회로도 | 기계도면 |
+|---|---|---|---|
+| `laser-marking.html` | `110_레이저마킹기/` | `laser-marking-circuit.pdf` | `laser-marking-drawing.pdf` |
+| `leak-pre-flow.html` | `120_조립전유로계리크검사기/` | `leak-pre-flow-circuit.pdf` | `leak-pre-flow-drawing.pdf` |
+| `leak-pre-full.html` | `130_조립전전체계리크검사기/` | `leak-pre-full-circuit.pdf` | `leak-pre-full-drawing.pdf` |
+| `nipple-oil-press.html` | `140_오일니쁠압입기·테이퍼플러그체결기(1개소)/` | `nipple-oil-circuit.pdf` | `nipple-oil-drawing.pdf` |
+| `cap-sealing-press.html` | `150_씰캡압입기/` | `cap-sealing-circuit.pdf` | `cap-sealing-drawing.pdf` |
+| `taper-plug-fastening.html` | `160_테이퍼플러그체결기(5개소)/` | `taper-fastening-circuit.pdf` | `taper-fastening-drawing.pdf` |
+| `dowel-pin-press.html` | `170_다월핀압입기/` | `dowel-pin-circuit.pdf` | `dowel-pin-drawing.pdf` |
+| `leak-post-flow.html` | `180_조립후유로계리크검사기/` | `leak-post-flow-circuit.pdf` | `leak-post-flow-drawing.pdf` |
+| `leak-post-full.html` | `190_조립후전체계리크검사기/` | `leak-post-full-circuit.pdf` | `leak-post-full-drawing.pdf` |
+| `taper-plug-height.html` | `200_테이퍼플러그돌출높이검사기/` | `taper-height-circuit.pdf` | `taper-height-drawing.pdf` |
+
+20개 전부 미업로드 상태입니다. **파일명 규칙(`-circuit.pdf` / `-drawing.pdf`)이 곧 2차 암호 적용 기준**이므로 (`gate.js`의 `TECH_PDF_RE = /-(circuit|drawing)\.pdf$/i` — 파일명 *끝부분*만 검사하므로 폴더 경로가 앞에 붙어도 정상 작동, 폴더 구조 도입 시 코드로 재확인함), 다른 이름을 쓰면 뷰어 직접 접근 시 2차 암호가 걸리지 않습니다.
 
 ### PDF 업로드 압축 기준 (2026-09-03 신설, 실측 기반)
 
@@ -210,6 +229,7 @@ QR을 찍으면 **암호창보다 먼저** 약 4.5초짜리 인트로가 재생�
 "② 첨부 문서" 링크는 PDF 파일을 직접 열지 않고 `pdf-viewer.html?file=파일명.pdf` 형태로 감싸서 엽니다.
 
 - `pdf-viewer.html`: `pdfjs/pdf.min.mjs`(vendored, `pdfjs-dist` npm 패키지의 빌드 산출물)로 PDF 각 페이지를 `<canvas>`에 직접 그려서 보여주는 자체 제작 뷰어. 다운로드·인쇄·저장 버튼을 아예 두지 않았고, 우클릭(길게 누르기) 메뉴도 막아둠.
+- 화면 상단 파일명 표시·`<title>`은 `file` 파라미터의 **마지막 경로 조각(basename)만** 보여줍니다(2026-09-18, 첨부문서 폴더 구조 도입과 함께 수정 — 이전엔 전체 경로를 그대로 보여줘서 폴더가 생기자 `첨부문서/120_조립전.../leak-pre-flow-partlist.pdf`처럼 길게 노출되는 회귀가 있었음).
 - `gate.js`도 이 페이지에 함께 걸려 있어, 새 탭으로 PDF 링크를 열면(예: 다른 세션에서 직접 접근) 다시 암호를 확인합니다.
 - **완전한 다운로드 차단은 아닙니다.** 파일 자체는 여전히 서버에 그대로 존재해서 주소를 알면 직접 받을 수 있고, 화면 캡처도 막을 수 없습니다. "저장 버튼을 없애 덜 눈에 띄게" 하는 수준입니다 (§8 암호 게이트와 동일한 성격의 트레이드오프).
 - 파일 용량: `pdf.min.mjs`(~350KB) + `pdf.worker.min.mjs`(~1.3MB), 최초 방문 시 1회 다운로드되고 이후 캐시됨.
@@ -293,7 +313,8 @@ QR 자체는 URL을 담은 이미지일 뿐이며 접근 제어 기능은 없습
 
 | 커밋 | 날짜 | 내용 |
 |---|---|---|
-| (최신) | 2026-09-18 | 우측 하단 "맨 위로 이동" 버튼(`scroll-top.js`) 신규 추가 — 챗봇 버튼과 겹치지 않게 바로 위에 배치 |
+| (최신) | 2026-09-18 | 첨부문서를 프로젝트 루트 평면 구조 → **설비별 폴더 구조**(`첨부문서/<번호>_<설비명>/`)로 재편, 링크 약 50개·기존 파일 5개 이동 |
+| `3bbad86` | 2026-09-18 | 우측 하단 "맨 위로 이동" 버튼(`scroll-top.js`) 신규 추가 — 챗봇 버튼과 겹치지 않게 바로 위에 배치 |
 | `43f0204` | 2026-09-18 | 설비 9개소 "트러블슈팅 이력" 대량 보강 — 1차: 카카오톡 대화 로그 + 사용자 제공 이력표·PPTX 분석. 2차: 사용자 제공 엑셀 원본(OPEN ISSUE 시트1~3) 대조로 스크린샷 오독 정정 + 신규 사례 7건 추가 |
 | `cd262f4` | 2026-09-18 | "⑨ 마스터 샘플·보정 이력" 섹션(리크테스터 4개소) 삭제 — 누설값관리시스템으로 이관 결정, 인계 문서 작성 |
 | `e115ddc` | 2026-09-17 | 설비 부착용 QR 라벨을 100×100mm 정사각형 → **70×100mm 직사각형**으로 재조정(폭만 축소, 내용 유지) — 재검증 후 PDF 교체 |
@@ -385,6 +406,7 @@ git 저장소는 그 안의 `후공정 설비 정보 시스템 프로젝트\` �
 | `favicon.svg` | 저장소 | 브라우저 탭 아이콘 (네이비 바탕 + 시안 QR 조준선, 인트로와 같은 모티프). 380바이트 |
 | `404.html` | 저장소 | 잘못된 주소 진입 시 GitHub Pages가 자동으로 띄우는 페이지. **암호 게이트를 걸지 않음** — 오타로 들어온 사람에게 암호를 물을 이유가 없고 사내 정보도 없음 |
 | `pdf-viewer.html`, `pdfjs/` | 저장소 | 다운로드 버튼 없는 PDF 뷰어 (§6) |
+| `첨부문서/` | 저장소 | 설비별 PDF 첨부문서·기술문서 폴더 (§6, 2026-09-18 신설) — 설비 10개 폴더 + `공용_LS-R700디텍터/` |
 | `qr-codes/*.png` | 저장소 | 설비별 QR코드 이미지 11개 |
 | `qr-codes/QR라벨_전체11개_통합.pdf`, `files.zip` | 저장소(미커밋) | 사용자가 직접 넣은 인쇄용 라벨 — git 추적 안 됨 |
 | 본 문서 (`PROJECT_OVERVIEW.md`) | 저장소 | 기술 참고 문서 (이 파일) |
