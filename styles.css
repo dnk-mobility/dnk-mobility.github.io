@@ -292,6 +292,7 @@
     font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:999px;
     background:var(--ok-bg);color:var(--ok-text);white-space:nowrap;
   }
+  .tag.warn{background:var(--warn-bg);color:var(--warn-text);}
 
   footer{
     max-width:640px;margin:6px auto 0;padding:6px 14px 34px;
