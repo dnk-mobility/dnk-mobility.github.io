@@ -201,7 +201,18 @@
   <details class="section">
     <summary><span class="num">⑦</span>트러블슈팅 이력<span class="chev">▾</span></summary>
     <div class="body">
-      <p style="color:var(--gray-500);font-size:12.5px;">수시 업데이트 영역 — 현재 등록된 사례 없음</p>
+      <div class="case">
+        <div class="case-head"><h5>사례 1 — 일반모드 안착·진입 후 정지 (간헐적 마킹시작 불량)</h5><span class="tag warn">설비 이상</span></div>
+        <p>현상: 일반모드에서 제품 안착 및 진입 후 설비가 간헐적으로 정지, 마킹 시작이 되지 않는 불량 발생 (2026-05-21 발생 ~ 06-09 조치완료)</p>
+        <p>원인: 인터페이스 보드 이상으로 마킹 시작 신호가 불안정하게 전달됨</p>
+        <p>조치: <strong>인터페이스 보드 교체</strong></p>
+      </div>
+      <div class="case">
+        <div class="case-head"><h5>사례 2 — 함침모드 안착 후 리더기 신호없음</h5><span class="tag warn">설비 이상</span></div>
+        <p>현상: 함침모드에서 제품 안착 후 리더기 신호가 들어오지 않는 현상 (2026-05-21 발생 ~ 05-29 조치완료)</p>
+        <p>원인: PLC 로직 문제</p>
+        <p>조치: 신호가 없을 경우 <strong>재신호로 재시도</strong>하도록 PLC 로직 수정</p>
+      </div>
     </div>
   </details>
 
