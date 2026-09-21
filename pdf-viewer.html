@@ -23,7 +23,15 @@
   .id-bar{
     background:var(--navy);color:#cdd8e3;font-size:11px;letter-spacing:.03em;
     padding:10px 14px;position:sticky;top:0;z-index:10;
+    display:flex;align-items:center;gap:10px;
   }
+  .id-bar .back-btn{
+    flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.1);
+    color:#fff;border:none;cursor:pointer;padding:0;
+  }
+  .id-bar .back-btn:active{background:rgba(255,255,255,.2);}
+  .id-bar .id-text{min-width:0;flex:1;}
   .id-bar .fname{color:#fff;font-weight:700;font-size:13px;display:block;margin-top:2px;
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   #status{padding:40px 16px;text-align:center;color:var(--gray-500);font-size:13px;}
@@ -38,8 +46,11 @@
 <noscript><style>body{visibility:hidden!important;}</style><div style="position:fixed;inset:0;z-index:999999;background:#0a2540;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Malgun Gothic','Apple SD Gothic Neo',sans-serif;font-size:14px;line-height:1.6;">이 페이지는 자바스크립트가 필요합니다.<br>브라우저 설정에서 자바스크립트를 켠 뒤 다시 열어주세요.</div></noscript>
 
 <div class="id-bar">
-  <span>공정 설비 정보관리 시스템 · 첨부 문서</span>
-  <span class="fname" id="fname">불러오는 중…</span>
+  <button type="button" class="back-btn" id="backBtn" aria-label="뒤로가기">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <span class="id-text">공정 설비 정보관리 시스템 · 첨부 문서
+  <span class="fname" id="fname">불러오는 중…</span></span>
 </div>
 <div id="status">문서를 불러오는 중입니다…</div>
 <div id="pages"></div>
@@ -57,6 +68,16 @@
 
   // 우클릭/길게 눌러 저장하기 방지 (완전 차단은 아니고 버튼 노출을 줄이는 수준)
   document.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+
+  // 뒤로가기 — 같은 탭에서 열렸으므로(2026-09-21부터) 방문 기록이 있으면 그대로 되돌아가고,
+  // 주소를 복사해 바로 들어온 경우처럼 기록이 없으면 홈으로 보낸다
+  document.getElementById("backBtn").addEventListener("click", function () {
+    if (document.referrer && document.referrer.indexOf(location.origin) === 0) {
+      history.back();
+    } else {
+      location.href = "index.html";
+    }
+  });
 
   if (!file) {
     statusEl.textContent = "문서 주소가 없습니다.";
