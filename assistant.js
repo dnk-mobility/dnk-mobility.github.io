@@ -417,10 +417,11 @@
     style.textContent =
       ".dnk-asst-btn{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:54px;height:54px;border-radius:50%;background:#0a2540;color:#fff;border:none;box-shadow:0 6px 18px rgba(10,37,64,.28),0 2px 6px rgba(10,37,64,.18);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:9000;padding:0;transition:transform .15s ease,box-shadow .15s ease;}" +
       ".dnk-asst-btn:active{transform:scale(.94);}" +
-      /* 마우스로 올렸을 때 은은하게 숨쉬듯 진해졌다 흐려지는 시안 글로우 — 버튼 뒤에
-         깔리는 원형 후광(::after)의 밝기를 반복 애니메이션으로 오르내림 */
-      ".dnk-asst-btn::after{content:'';position:absolute;inset:-8px;border-radius:50%;background:radial-gradient(circle,rgba(55,198,224,.65),rgba(55,198,224,0) 72%);opacity:0;pointer-events:none;z-index:-1;}" +
-      "@keyframes dnk-asst-glow{0%,100%{opacity:.3;}50%{opacity:1;}}" +
+      /* 숨쉬듯 진해졌다 흐려지는 시안 글로우 — 마우스 유무와 상관없이(터치 기기 포함)
+         항상 재생돼서 모든 화면에서 보이도록 함. 버튼 뒤에 깔리는 원형 후광(::after)의
+         밝기를 반복 애니메이션으로 오르내린다. */
+      ".dnk-asst-btn::after{content:'';position:absolute;inset:-14px;border-radius:50%;background:radial-gradient(circle,rgba(55,198,224,.9),rgba(55,198,224,0) 70%);pointer-events:none;z-index:-1;animation:dnk-asst-glow 1.8s ease-in-out infinite;}" +
+      "@keyframes dnk-asst-glow{0%,100%{opacity:.2;}50%{opacity:1;}}" +
       /* 페이지 끝까지 스크롤했을 때 버튼이 푸터 문구(문의처 안내)를 가리는 문제가
          있어, 모든 페이지 하단에 버튼 높이만큼 여백을 확보한다. */
       "footer{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!important;}" +
@@ -443,8 +444,8 @@
       ".dnk-asst-input{flex:1;min-width:0;border:1px solid #d3d8de;border-radius:20px;padding:9px 14px;font-size:16px;outline:none;}" +
       ".dnk-asst-input:focus{border-color:#0f6cb0;}" +
       ".dnk-asst-send{width:38px;height:38px;border-radius:50%;background:#0a2540;color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}" +
-      "@media (hover:hover) and (pointer:fine){.dnk-asst-btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(10,37,64,.32),0 3px 8px rgba(10,37,64,.2);}.dnk-asst-btn:hover::after{animation:dnk-asst-glow 1.6s ease-in-out infinite;}.dnk-asst-action:hover{background:#0f6cb0;color:#fff;}}" +
-      "@media (prefers-reduced-motion:reduce){.dnk-asst-panel,.dnk-asst-btn{transition:none!important;}.dnk-asst-btn::after{animation:none!important;opacity:0!important;}}";
+      "@media (hover:hover) and (pointer:fine){.dnk-asst-btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(10,37,64,.32),0 3px 8px rgba(10,37,64,.2);}.dnk-asst-action:hover{background:#0f6cb0;color:#fff;}}" +
+      "@media (prefers-reduced-motion:reduce){.dnk-asst-panel,.dnk-asst-btn{transition:none!important;}.dnk-asst-btn::after{animation:none!important;opacity:.45!important;}}";
     document.documentElement.appendChild(style);
   }
 
