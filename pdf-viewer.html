@@ -91,6 +91,36 @@
     // 암호 게이트(1차 + 기술문서는 2차)를 통과한 뒤에 파일을 내려받는다
     await (window.dnkGate && window.dnkGate.ready);
 
+    // 전기회로도·기계도면처럼 도면이 복잡해 pdf.js 실시간 렌더링이 느리거나 멈추는 파일은,
+    // 업로드 시 미리 페이지별 PNG로 래스터화해 "<파일명>.pages/1.png, 2.png, ..." 에 넣어둔다
+    // (tools/pdf_to_page_images.py). 그 폴더가 있으면 이미지를, 없으면 기존 pdf.js 방식을 쓴다.
+    var imageBase = file.replace(/\.pdf$/i, "") + ".pages/";
+    function loadImagePage(n) {
+      return new Promise(function (resolve) {
+        var img = new Image();
+        img.onload = function () { resolve(img); };
+        img.onerror = function () { resolve(null); };
+        img.src = imageBase + n + ".png";
+      });
+    }
+
+    function renderPrerendered(firstImg) {
+      statusEl.style.display = "none";
+      var appendPage = function (img) {
+        img.className = "pg";
+        pagesEl.appendChild(img);
+      };
+      appendPage(firstImg);
+      var next = function (n) {
+        loadImagePage(n).then(function (img) {
+          if (!img) return; // 더 이상 페이지 없음 — 정상 종료
+          appendPage(img);
+          next(n + 1);
+        });
+      };
+      next(2);
+    }
+
     // 페이지 하나가 멈춰도(드물게 렌더링이 응답 없음 상태에 빠지는 경우) 전체가
     // 무한 로딩으로 보이지 않도록, 페이지마다 제한시간을 두고 넘어간다
     var PAGE_TIMEOUT_MS = 20000;
@@ -106,39 +136,55 @@
       });
     }
 
-    pdfjsLib
-      .getDocument(file)
-      .promise.then(function (pdf) {
-        statusEl.style.display = "none";
-        var renderNext = function (n) {
-          if (n > pdf.numPages) return;
-          pdf.getPage(n).then(function (page) {
-            var scale = Math.min(2, (Math.min(900, window.innerWidth) - 16) / page.getViewport({ scale: 1 }).width);
-            var viewport = page.getViewport({ scale: scale });
-            var canvas = document.createElement("canvas");
-            canvas.className = "pg";
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
-            pagesEl.appendChild(canvas);
-            withTimeout(page.render({ canvasContext: canvas.getContext("2d"), viewport: viewport }).promise, PAGE_TIMEOUT_MS)
-              .then(function () {
-                renderNext(n + 1);
-              })
-              .catch(function () {
-                canvas.remove();
-                var errBox = document.createElement("div");
-                errBox.className = "pg-err";
-                errBox.textContent = n + "번째 페이지를 표시하지 못했습니다. 새로고침해서 다시 시도해보세요.";
-                pagesEl.appendChild(errBox);
-                renderNext(n + 1);
-              });
-          });
-        };
-        renderNext(1);
-      })
-      .catch(function (e) {
-        statusEl.textContent = "문서를 불러오지 못했습니다 (" + e.message + ")";
-      });
+    function renderWithPdfJs() {
+      pdfjsLib
+        .getDocument(file)
+        .promise.then(function (pdf) {
+          statusEl.style.display = "none";
+          // 고해상도(레티나) 화면에서 흐릿하게 보이지 않도록, 화면에 보이는 크기(CSS px)는
+          // 그대로 두고 캔버스의 실제 해상도만 devicePixelRatio만큼 올려서 그린다
+          var outputScale = window.devicePixelRatio || 1;
+          var renderNext = function (n) {
+            if (n > pdf.numPages) return;
+            pdf.getPage(n).then(function (page) {
+              var scale = Math.min(2, (Math.min(900, window.innerWidth) - 16) / page.getViewport({ scale: 1 }).width);
+              var viewport = page.getViewport({ scale: scale });
+              var canvas = document.createElement("canvas");
+              canvas.className = "pg";
+              canvas.width = Math.floor(viewport.width * outputScale);
+              canvas.height = Math.floor(viewport.height * outputScale);
+              canvas.style.width = Math.floor(viewport.width) + "px";
+              canvas.style.height = Math.floor(viewport.height) + "px";
+              pagesEl.appendChild(canvas);
+              var transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : undefined;
+              withTimeout(page.render({ canvasContext: canvas.getContext("2d"), viewport: viewport, transform: transform }).promise, PAGE_TIMEOUT_MS)
+                .then(function () {
+                  renderNext(n + 1);
+                })
+                .catch(function () {
+                  canvas.remove();
+                  var errBox = document.createElement("div");
+                  errBox.className = "pg-err";
+                  errBox.textContent = n + "번째 페이지를 표시하지 못했습니다. 새로고침해서 다시 시도해보세요.";
+                  pagesEl.appendChild(errBox);
+                  renderNext(n + 1);
+                });
+            });
+          };
+          renderNext(1);
+        })
+        .catch(function (e) {
+          statusEl.textContent = "문서를 불러오지 못했습니다 (" + e.message + ")";
+        });
+    }
+
+    loadImagePage(1).then(function (firstImg) {
+      if (firstImg) {
+        renderPrerendered(firstImg);
+      } else {
+        renderWithPdfJs();
+      }
+    });
   }
 </script>
 

@@ -45,6 +45,8 @@
     display:flex;
     justify-content:space-between;
     align-items:center;
+    max-width:640px;
+    margin:0 auto;
   }
   .id-bar .product{
     font-weight:700;
@@ -58,6 +60,8 @@
     background:var(--navy);
     color:var(--white);
     padding:18px 16px;
+    max-width:640px;
+    margin:0 auto;
   }
   .doc-header .doc-type{
     font-size:11px;
