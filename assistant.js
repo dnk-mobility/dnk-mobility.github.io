@@ -112,6 +112,7 @@
   var BUBBLE_SVG = '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5c0 4.14-4.03 7.5-9 7.5-1.34 0-2.6-.24-3.74-.67L3 20l1.38-3.44A7.35 7.35 0 0 1 3 11.5C3 7.36 7.03 4 12 4s9 3.36 9 7.5z"/></svg>';
   var CLOSE_SVG = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
   var SEND_SVG = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M3 11.5L20.5 4 13 21.5l-2.2-7.3L3 11.5z"/></svg>';
+  var HOME_SVG = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5M5 9.5V21h14V9.5"/></svg>';
 
   // ===================== 유틸 =====================
 
@@ -214,7 +215,7 @@
       var text = opened
         ? "\"" + label + "\" 항목으로 이동했어요." + (topic && topic.locked ? " 잠금 항목이라 눌러서 암호를 확인해야 볼 수 있어요." : "")
         : "이 페이지에는 \"" + label + "\" 항목이 없어요.";
-      addMessage({ from: "bot", text: text, actions: quickChips() });
+      addMessage({ from: "bot", text: text });
     } else {
       location.href = eq.file + "?goto=" + topicKey;
     }
@@ -240,7 +241,7 @@
 
   function goToEquipment(eq) {
     if (eq.file === currentFile()) {
-      addMessage({ from: "bot", text: "지금 보고 계신 페이지예요.", actions: quickChips() });
+      addMessage({ from: "bot", text: "지금 보고 계신 페이지예요." });
       return;
     }
     location.href = eq.file;
@@ -251,7 +252,7 @@
     actions.push({ label: "일상점검표 보기", run: function () { gotoSection(eq, "checklist"); } });
     if (eq.hasManual) actions.push({ label: "조작 매뉴얼 보기", run: function () { gotoSection(eq, "manual"); } });
     if (eq.theoryKey && THEORY[eq.theoryKey]) {
-      actions.push({ label: "공정 상식 보기", run: function () { addMessage({ from: "bot", text: THEORY[eq.theoryKey].text, actions: quickChips() }); } });
+      actions.push({ label: "공정 상식 보기", run: function () { addMessage({ from: "bot", text: THEORY[eq.theoryKey].text }); } });
     }
     return actions;
   }
@@ -292,14 +293,14 @@
       { label: "자주 묻는 질문", run: function () {
         addMessage({
           from: "bot", text: "궁금하신 걸 선택하세요.",
-          actions: FAQ.map(function (f) { return { label: f.q, run: function () { addMessage({ from: "bot", text: f.a, actions: quickChips() }); } }; })
+          actions: FAQ.map(function (f) { return { label: f.q, run: function () { addMessage({ from: "bot", text: f.a }); } }; })
         });
       } },
       { label: "공정 상식", run: function () {
         var keys = Object.keys(THEORY);
         addMessage({
           from: "bot", text: "어떤 공정이 궁금하세요?",
-          actions: keys.map(function (k) { return { label: THEORY[k].label, run: function () { addMessage({ from: "bot", text: THEORY[k].text, actions: quickChips() }); } }; })
+          actions: keys.map(function (k) { return { label: THEORY[k].label, run: function () { addMessage({ from: "bot", text: THEORY[k].text }); } }; })
         });
       } }
     ];
@@ -309,7 +310,7 @@
     var q = rawQ.trim();
 
     var faq = findFaq(q);
-    if (faq) return { from: "bot", text: faq.a, actions: quickChips() };
+    if (faq) return { from: "bot", text: faq.a };
 
     var matches = findEquipment(q);
     var hasTheoryWord = /원리|이론|왜|상식/.test(q);
@@ -328,7 +329,7 @@
       if (hasTheoryWord && eq.theoryKey && THEORY[eq.theoryKey]) {
         return {
           from: "bot", text: THEORY[eq.theoryKey].text,
-          actions: [{ label: eq.name + " 페이지 열기 →", run: function () { goToEquipment(eq); } }].concat(quickChips())
+          actions: [{ label: eq.name + " 페이지 열기 →", run: function () { goToEquipment(eq); } }]
         };
       }
       if (topic) return replyWithSectionJump(eq, topic);
@@ -376,7 +377,6 @@
   // ===================== UI =====================
 
   var msgBody = null;
-  var greeted = false;
 
   // 이전 질문/답변(그리고 그 안의 버튼 목록)을 지우고 새 응답만 남긴다 — 버튼을
   // 눌러도 패널이 닫히지 않고 계속 아래로 쌓여 세로로 길어지는 문제를 막기 위함.
@@ -428,7 +428,9 @@
       ".dnk-asst-panel{position:fixed;right:16px;bottom:calc(78px + env(safe-area-inset-bottom,0px));width:min(360px,calc(100vw - 32px));max-height:min(70vh,520px);background:#fff;border-radius:14px;box-shadow:0 12px 32px rgba(10,37,64,.22),0 4px 10px rgba(10,37,64,.12);display:flex;flex-direction:column;overflow:hidden;z-index:9000;opacity:0;transform:translateY(12px) scale(.98);pointer-events:none;transition:opacity .18s ease,transform .18s ease;}" +
       ".dnk-asst-panel.open{opacity:1;transform:none;pointer-events:auto;}" +
       ".dnk-asst-head{background:#0a2540;color:#fff;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;font-size:13.5px;font-weight:700;flex-shrink:0;}" +
-      ".dnk-asst-close{background:none;border:none;color:#cdd8e3;cursor:pointer;padding:2px;display:flex;}" +
+      ".dnk-asst-head-btns{display:flex;align-items:center;gap:10px;}" +
+      ".dnk-asst-home,.dnk-asst-close{background:none;border:none;color:#cdd8e3;cursor:pointer;padding:2px;display:flex;}" +
+      ".dnk-asst-home:active,.dnk-asst-close:active{color:#fff;}" +
       ".dnk-asst-body{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;background:#f4f6f8;-webkit-overflow-scrolling:touch;}" +
       ".dnk-asst-msg{display:flex;flex-direction:column;gap:6px;max-width:88%;}" +
       ".dnk-asst-msg.user{align-self:flex-end;align-items:flex-end;}" +
@@ -444,9 +446,18 @@
       ".dnk-asst-input{flex:1;min-width:0;border:1px solid #d3d8de;border-radius:20px;padding:9px 14px;font-size:16px;outline:none;}" +
       ".dnk-asst-input:focus{border-color:#0f6cb0;}" +
       ".dnk-asst-send{width:38px;height:38px;border-radius:50%;background:#0a2540;color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}" +
-      "@media (hover:hover) and (pointer:fine){.dnk-asst-btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(10,37,64,.32),0 3px 8px rgba(10,37,64,.2);}.dnk-asst-action:hover{background:#0f6cb0;color:#fff;}}" +
+      "@media (hover:hover) and (pointer:fine){.dnk-asst-btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(10,37,64,.32),0 3px 8px rgba(10,37,64,.2);}.dnk-asst-action:hover{background:#0f6cb0;color:#fff;}.dnk-asst-home:hover,.dnk-asst-close:hover{color:#fff;}}" +
       "@media (prefers-reduced-motion:reduce){.dnk-asst-panel,.dnk-asst-btn{transition:none!important;}.dnk-asst-btn::after{animation:none!important;opacity:.45!important;}}";
     document.documentElement.appendChild(style);
+  }
+
+  function showHome() {
+    clearMessages();
+    addMessage({
+      from: "bot",
+      text: "안녕하세요! 설비 정보 도우미예요. 설비 이름, 공정No., 점검표·매뉴얼·상식 등 궁금한 걸 입력하거나 아래 버튼을 눌러보세요.",
+      actions: quickChips()
+    });
   }
 
   function buildWidget() {
@@ -455,7 +466,10 @@
     wrap.innerHTML =
       '<button type="button" class="dnk-asst-btn" aria-label="설비 정보 도우미 열기" aria-expanded="false">' + BUBBLE_SVG + "</button>" +
       '<div class="dnk-asst-panel" role="dialog" aria-label="설비 정보 도우미">' +
-        '<div class="dnk-asst-head"><span>설비 정보 도우미</span><button type="button" class="dnk-asst-close" aria-label="닫기">' + CLOSE_SVG + "</button></div>" +
+        '<div class="dnk-asst-head"><span>설비 정보 도우미</span><div class="dnk-asst-head-btns">' +
+          '<button type="button" class="dnk-asst-home" aria-label="처음 화면으로">' + HOME_SVG + "</button>" +
+          '<button type="button" class="dnk-asst-close" aria-label="닫기">' + CLOSE_SVG + "</button>" +
+        "</div></div>" +
         '<div class="dnk-asst-body"></div>' +
         '<div class="dnk-asst-inputrow">' +
           '<input type="text" class="dnk-asst-input" placeholder="궁금한 걸 입력해보세요" aria-label="질문 입력" autocomplete="off" />' +
@@ -469,6 +483,7 @@
     var input = wrap.querySelector(".dnk-asst-input");
     var sendBtn = wrap.querySelector(".dnk-asst-send");
     var closeBtn = wrap.querySelector(".dnk-asst-close");
+    var homeBtn = wrap.querySelector(".dnk-asst-home");
 
     msgBody = wrap.querySelector(".dnk-asst-body");
 
@@ -477,19 +492,18 @@
       opened = v;
       panel.classList.toggle("open", v);
       btn.setAttribute("aria-expanded", String(v));
-      if (v && !greeted) {
-        greeted = true;
-        addMessage({
-          from: "bot",
-          text: "안녕하세요! 설비 정보 도우미예요. 설비 이름, 공정No., 점검표·매뉴얼·상식 등 궁금한 걸 입력하거나 아래 버튼을 눌러보세요.",
-          actions: quickChips()
-        });
+      // 닫을 때마다 대화 내용을 비워서, 다시 열면 항상 처음 화면(인사말 + 메뉴)부터
+      // 시작하도록 한다 — 이전에 보던 답변이 그대로 남아있으면 "닫았다 열었는데
+      // 왜 처음 화면이 아니지"라는 혼란을 준다.
+      if (v) {
+        showHome();
+        setTimeout(function () { input.focus(); }, 60);
       }
-      if (v) setTimeout(function () { input.focus(); }, 60);
     }
 
     btn.addEventListener("click", function () { setOpen(!opened); });
     closeBtn.addEventListener("click", function () { setOpen(false); });
+    homeBtn.addEventListener("click", function () { showHome(); });
 
     function submit() {
       var v = input.value;
