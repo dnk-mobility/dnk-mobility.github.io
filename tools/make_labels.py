@@ -51,6 +51,12 @@ EQUIPMENT = [
     (200, "테이퍼 플러그 돌출높이 검사기", "taper-plug-height.html"),
 ]
 
+# 개별 설비No.가 아니라 index.html(전체 설비 목록)로 바로 가는 라벨.
+# 공정No. 자리에 숫자 대신 "전체"를 표시하고, file=""이면 BASE_URL 루트(=index.html)로 연결된다.
+# 목록 맨 앞에 둬서(현장 입구 등에 붙이는 용도) 개별 설비 라벨과 구분되게 함.
+INDEX_LABEL = ("전체", "전체 설비 인덱스", "")
+EQUIPMENT = [INDEX_LABEL] + EQUIPMENT
+
 WIDTH_MM = 70.0           # 라벨 가로 (실제 인쇄 크기)
 HEIGHT_MM = 100.0         # 라벨 세로 (실제 인쇄 크기)
 PXMM = 12                 # 렌더링 해상도 (12px/mm ≈ 305dpi) — 100x100mm 버전과 동일 밀도 유지
@@ -186,7 +192,7 @@ def build_pdf():
 
     for pno, group in enumerate(groups, 1):
         page = doc.new_page(width=A4_W, height=A4_H)
-        nos = ", ".join("No.%d" % e[0] for e in group)
+        nos = ", ".join(e[1] if isinstance(e[0], str) else "No.%d" % e[0] for e in group)
         page.insert_text((left, 16 * PT_MM),
                          f"설비 QR 라벨 70x100mm — {pno}/{len(groups)} 페이지  ({nos})",
                          fontsize=11, fontname="kbold", fontfile=KFONT_BOLD, color=C_NAVY)
