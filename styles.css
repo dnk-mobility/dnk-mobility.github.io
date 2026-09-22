@@ -43,8 +43,8 @@
     letter-spacing:.03em;
     padding:6px 16px;
     display:flex;
-    justify-content:space-between;
     align-items:center;
+    gap:9px;
     max-width:640px;
     margin:0 auto;
   }
@@ -53,7 +53,17 @@
     font-size:12px;
     color:#ffffff;
     letter-spacing:.01em;
+    margin-left:auto;
   }
+  .id-bar .home-btn{
+    flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    width:32px;height:32px;border-radius:9px;
+    background:#37c6e0;color:#0a2540;
+    box-shadow:0 1px 4px rgba(0,0,0,.3);
+  }
+  .id-bar .home-btn:hover,
+  .id-bar .home-btn:focus-visible{background:#5cd3e8;}
+  .id-bar .home-btn:active{background:#22aec8;}
 
   /* ===== Document title block (mirrors 작업표준서 서식) ===== */
   .doc-header{
