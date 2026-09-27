@@ -472,6 +472,7 @@ git 저장소는 그 안의 `후공정 설비 정보 시스템 프로젝트\` �
 - PDF→이미지 변환은 `pdftoppm` 대신 Python `pymupdf`(fitz) 사용. `python3`는 Windows 스토어 스텁이라 실패하므로 항상 `python` 사용.
 - 웹페이지 동작 검증은 Playwright(설치됨) + `python -m http.server` 로컬 서버 사용. `file://` 로 열면 ES module CORS 정책 때문에 PDF 뷰어가 동작하지 않음에 주의.
 - Korean 경로/문자열이 많아 Bash 인라인 `python -c` 는 인코딩이 깨짐 — 스크립트 파일로 저장해 실행할 것.
+- `git-filter-repo`는 `pip install git-filter-repo`로 설치됨. **이 환경에서 `git filter-repo ...`(git 서브커맨드 형태)로 실행하면 응답 없이 멈춘다** — `py -m git_filter_repo ...`로 직접 모듈 실행할 것 (2026-09-23, 기술문서 PDF를 git 히스토리에서 제거할 때 확인).
 
 ---
 
@@ -560,6 +561,7 @@ git 저장소는 그 안의 `후공정 설비 정보 시스템 프로젝트\` �
 
 ### 배포 전
 
+- [ ] **새로 올리려는 문서·데이터가 정말 이 저장소에 있어도 되는가?** `gh api repos/dnk-mobility/dnk-mobility.github.io --jq '{visibility,private}'`로 저장소가 Public인지 먼저 확인할 것 — Public이면 `gate.js`의 암호는 브라우저 화면만 가릴 뿐, 저장소를 `git clone`하거나 github.com에서 열어보면 아무 의미가 없다. "클라이언트 사이드 암호로 지켰다"는 건 보안이 아니다(§2 "복제·유출 위험", 2026-09-23, "③ 기술문서" 섹션 전체를 이 이유로 삭제한 사례)
 - [ ] `gate.js`의 `HASH_1`이 실제 사용 중인 암호의 SHA-256과 일치하는지 터미널에서 재계산해 확인 (§4.4 명령어는 `인트로_암호게이트_구현상세.md` 참고)
 - [ ] 로컬 서버(`python -m http.server`, `.claude/launch.json`에 구성됨)로 실제 브라우저에서 동작 확인 — `file://`로 열면 ES module CORS 정책 때문에 PDF 뷰어가 안 됨
 - [ ] 로컬 서버로 확인했는데 "분명히 고쳤는데 반영이 안 된 것처럼" 보인다면 — **먼저 브라우저 캐시부터 의심할 것.** `python -m http.server`는 `Cache-Control` 헤더를 안 보내서 브라우저가 `.js`/`.css` 파일을 적극적으로 캐싱한다. 콘솔에서 `fetch(url,{cache:'no-store'})`로 서버 쪽 최신 내용을 먼저 확인하고, 다르면 `fetch(url,{cache:'reload'})` 후 새로고침하거나 새 탭에서 여는 것으로 해결 (2026-09-22, `assistant.js` 수정이 반영 안 된 것처럼 보였던 사례)
