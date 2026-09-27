@@ -88,7 +88,7 @@
     fnameEl.textContent = baseName;
     document.title = baseName + " | 문서 보기";
 
-    // 암호 게이트(1차 + 기술문서는 2차)를 통과한 뒤에 파일을 내려받는다
+    // 암호 게이트를 통과한 뒤에 파일을 내려받는다
     await (window.dnkGate && window.dnkGate.ready);
 
     // 전기회로도·기계도면처럼 도면이 복잡해 pdf.js 실시간 렌더링이 느리거나 멈추는 파일은,

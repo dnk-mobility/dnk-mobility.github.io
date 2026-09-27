@@ -10,9 +10,6 @@
     보이지 않는다(문서 루트의 visibility:hidden을 그대로 물려받음).
   - 섹션 자동 펼침은 새 id를 추가하지 않고 각 <summary> 텍스트로 찾는다 — 10개
     설비 페이지의 섹션 제목 문구가 전부 동일하다는 것을 확인하고 설계함.
-  - 잠금 섹션(`data-lock="2"`, 기술문서)은 강제로 펼치지 않고 스크롤만
-    한다 — 여기서 직접 열어버리면 gate.js의 2차 암호 확인을 우회하게 되므로 반드시
-    지켜야 하는 제약.
   - 다른 페이지의 섹션으로 안내할 때는 `?goto=<토픽키>`를 붙여 이동시키고, 그
     페이지에서 다시 이 스크립트가 파라미터를 읽어 같은 방식으로 펼친 뒤 URL에서
     제거한다.
@@ -66,7 +63,6 @@
   var SECTION_TOPICS = [
     { key: "overview", label: "설비 개요", match: "설비 개요", keywords: ["개요"] },
     { key: "docs", label: "첨부 문서", match: "첨부 문서", keywords: ["첨부문서", "첨부 문서", "파트리스트", "part list"] },
-    { key: "tech", label: "기술문서", match: "기술문서", keywords: ["기술문서", "회로도", "기계도면", "도면"], locked: true },
     { key: "steps", label: "표준 작업 순서", match: "표준 작업 순서", keywords: ["작업순서", "작업 순서", "공정순서"] },
     { key: "spec", label: "검사 규격 및 파라미터", match: "검사 규격", keywords: ["검사규격", "검사 규격", "파라미터", "규격"] },
     { key: "checklist", label: "설비 일상점검표", match: "일상점검표", keywords: ["점검표", "일상점검", "점검"] },
@@ -200,9 +196,7 @@
   function openOrScrollSection(topicKey) {
     var el = findSectionElement(topicKey);
     if (!el) return false;
-    var locked = el.getAttribute("data-lock") === "2";
-    // 잠금 섹션은 강제로 펼치지 않는다 — gate.js의 2차 암호 확인을 우회하지 않기 위함.
-    if (!locked) el.open = true;
+    el.open = true;
     el.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
     return true;
   }
@@ -213,7 +207,7 @@
       var topic = topicByKey(topicKey);
       var label = topic ? topic.label : topicKey;
       var text = opened
-        ? "\"" + label + "\" 항목으로 이동했어요." + (topic && topic.locked ? " 잠금 항목이라 눌러서 암호를 확인해야 볼 수 있어요." : "")
+        ? "\"" + label + "\" 항목으로 이동했어요."
         : "이 페이지에는 \"" + label + "\" 항목이 없어요.";
       addMessage({ from: "bot", text: text });
     } else {
@@ -259,8 +253,7 @@
 
   function replyWithSectionJump(eq, topic) {
     var sameFile = eq.file === currentFile();
-    var text = eq.name + "의 \"" + topic.label + "\"" + (topic.locked ? " (잠금 항목)" : "") + "로 안내할게요.";
-    if (topic.locked) text += " 잠금 항목이라 실제로 보려면 암호 확인이 필요해요.";
+    var text = eq.name + "의 \"" + topic.label + "\"로 안내할게요.";
     return {
       from: "bot",
       text: text,
